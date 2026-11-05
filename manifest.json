@@ -1,0 +1,1003 @@
+{
+  "version": 1,
+  "generated_at": "2026-11-05T11:30:39Z",
+  "workspace": "/Users/dhanoopbhaskar/git/test-code-search/benchmark",
+  "ground_truth": {
+    "localization": "files and hunks changed by the fix commit",
+    "structural": "regex-derived symbol/call/import graph at base_commit"
+  },
+  "instances": [
+    {
+      "instance_id": "spring-petclinic-microservices-symbol_definition-a3f9d06d-processcreationform",
+      "task": "symbol_definition",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_commit": "a3f9d06d36d7183b8e7a957d4d93d2dfc884f5ae",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Where is `processCreationForm` defined?",
+      "problem_statement": "Add validation to reject future pet birth dates",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 57,
+            "end_line": 67,
+            "name": "processCreationForm",
+            "kind": "method"
+          }
+        ]
+      },
+      "query": {
+        "text": "Where is `processCreationForm` defined?",
+        "title": "Where is `processCreationForm` defined?",
+        "issue_text": "Add validation to reject future pet birth dates",
+        "symbol": "processCreationForm",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "processCreationForm",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 57,
+        "symbol_end_line": 67,
+        "gold_count": 1,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 47
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-symbol_definition-1e7ecb8b-processupdateform",
+      "task": "symbol_definition",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Where is `processUpdateForm` defined?",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 70,
+            "end_line": 74,
+            "name": "processUpdateForm",
+            "kind": "method"
+          }
+        ]
+      },
+      "query": {
+        "text": "Where is `processUpdateForm` defined?",
+        "title": "Where is `processUpdateForm` defined?",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "processUpdateForm",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "processUpdateForm",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 70,
+        "symbol_end_line": 74,
+        "gold_count": 1,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-loc-aefaf7fa",
+      "task": "localization",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "295fa8d5ee10f7b6daddf83a2c65f9051a87564b",
+      "fix_commit": "aefaf7fa9eb0ab911a24c346ca0e4dc5837251c7",
+      "fix_date": "2026-09-23",
+      "issue_ref": "#564",
+      "title": "Fix GenAI vector store loading from JAR",
+      "problem_statement": "Fix GenAI vector store loading from JAR\n\n## Description\n\nThe GenAI service could not load the pre-embedded vector store when running from the Spring Boot executable JAR because `ClassPathResource#getFile()` cannot resolve a nested `BOOT-INF/classes` resource to a filesystem file. Load the `Resource` directly so `SimpleVectorStore` reads its input stream.\n\nN/A\n\n## Type of change\n\n- [x] Bug fix\n- [ ] New feature\n- [ ] Documentation update\n- [ ] Dependency upgrade\n\n## Checklist\n\n- [ ] I have read the [CONTRIBUTING](../CONTRIBUTING.md) guide\n- [ ] **This is NOT coursework, a student assignment, or homework** — I understand that forks of this repo are widely used in courses and that student PRs will be closed without review\n- [x] My change targets the `main` branch of **spring-petclinic/spring-petclinic-microservices**, not my own fork\n- [x] I have tested this change locally\n- [ ] Existing tests pass (`./mvnw test`)\n\n> ⚠️ **Are you a student?**\n> If you forked this repo for a course or bootcamp, your changes belong in **your own fork**, not here.\n> PRs that are part of a course assignment will be labelled `invalid` and closed immediately.",
+      "source_url": "https://github.com/spring-petclinic/spring-petclinic-microservices/pull/564",
+      "gold": {
+        "files": [
+          "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java"
+        ],
+        "hunks": {
+          "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java": [
+            [
+              58,
+              58
+            ]
+          ]
+        },
+        "sites": []
+      },
+      "query": {
+        "text": "Fix GenAI vector store loading from JAR\n\n## Description\n\nThe GenAI service could not load the pre-embedded vector store when running from the Spring Boot executable JAR because `ClassPathResource#getFile()` cannot resolve a nested `BOOT-INF/classes` resource to a filesystem file. Load the `Resource` directly so `SimpleVectorStore` reads its input stream.\n\nN/A\n\n## Type of change\n\n- [x] Bug fix\n- [ ] New feature\n- [ ] Documentation update\n- [ ] Dependency upgrade\n\n## Checklist\n\n- [ ] I have read the [CONTRIBUTING](../CONTRIBUTING.md) guide\n- [ ] **This is NOT coursework, a student assignment, or homework** — I understand that forks of this repo are widely used in courses and that student PRs will be closed without review\n- [x] My change targets the `main` branch of **spring-petclinic/spring-petclinic-microservices**, not my own fork\n- [x] I have tested this change locally\n- [ ] Existing tests pass (`./mvnw test`)\n\n> ⚠️ **Are you a student?**\n> If you forked this repo for a course or bootcamp, your changes belong in **your own fork**, not here.\n> PRs that are part of a course assignment will be labelled `invalid` and closed immediately.",
+        "title": "Fix GenAI vector store loading from JAR",
+        "issue_text": "Fix GenAI vector store loading from JAR\n\n## Description\n\nThe GenAI service could not load the pre-embedded vector store when running from the Spring Boot executable JAR because `ClassPathResource#getFile()` cannot resolve a nested `BOOT-INF/classes` resource to a filesystem file. Load the `Resource` directly so `SimpleVectorStore` reads its input stream.\n\nN/A\n\n## Type of change\n\n- [x] Bug fix\n- [ ] New feature\n- [ ] Documentation update\n- [ ] Dependency upgrade\n\n## Checklist\n\n- [ ] I have read the [CONTRIBUTING](../CONTRIBUTING.md) guide\n- [ ] **This is NOT coursework, a student assignment, or homework** — I understand that forks of this repo are widely used in courses and that student PRs will be closed without review\n- [x] My change targets the `main` branch of **spring-petclinic/spring-petclinic-microservices**, not my own fork\n- [x] I have tested this change locally\n- [ ] Existing tests pass (`./mvnw test`)\n\n> ⚠️ **Are you a student?**\n> If you forked this repo for a course or bootcamp, your changes belong in **your own fork**, not here.\n> PRs that are part of a course assignment will be labelled `invalid` and closed immediately."
+      },
+      "meta": {
+        "is_pr_text": true,
+        "gold_count": 1,
+        "changed_lines": 3
+      },
+      "flags": {
+        "mentions_gold_path": false
+      },
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 0,
+        "changed_lines": 3,
+        "problem_chars": 1151
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-loc-39f6670e",
+      "task": "localization",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "81a1cc0c7ecdf7a750695bd8f9344ab443b4cbf3",
+      "fix_commit": "39f6670e009a66e4b730d4e777e25a8ff7951a59",
+      "fix_date": "2024-01-05",
+      "issue_ref": "#253",
+      "title": "Introducing record class to only customer-service to start with",
+      "problem_statement": "Introducing record class to only customer-service to start with\n\nI am creating a smaller PR and have Included record to only the customer-service Microservices.\nWill apply to other micro services if this looks good.",
+      "source_url": "https://github.com/spring-petclinic/spring-petclinic-microservices/pull/253",
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetDetails.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetRequest.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java": [
+            [
+              115,
+              115
+            ]
+          ],
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java": [
+            [
+              19,
+              20
+            ],
+            [
+              24,
+              24
+            ],
+            [
+              28,
+              28
+            ],
+            [
+              47,
+              47
+            ],
+            [
+              54,
+              55
+            ],
+            [
+              80,
+              81
+            ],
+            [
+              83,
+              83
+            ]
+          ],
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetDetails.java": [
+            [
+              17,
+              17
+            ],
+            [
+              22,
+              23
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              28,
+              28
+            ],
+            [
+              30,
+              30
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              34,
+              34
+            ],
+            [
+              36,
+              37
+            ],
+            [
+              39,
+              42
+            ]
+          ],
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetRequest.java": [
+            [
+              18,
+              18
+            ],
+            [
+              21,
+              21
+            ],
+            [
+              26,
+              32
+            ],
+            [
+              33,
+              33
+            ]
+          ],
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java": [
+            [
+              19,
+              19
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              56,
+              57
+            ],
+            [
+              67,
+              67
+            ],
+            [
+              74,
+              75
+            ],
+            [
+              77,
+              77
+            ],
+            [
+              86,
+              87
+            ],
+            [
+              92,
+              93
+            ]
+          ]
+        },
+        "sites": []
+      },
+      "query": {
+        "text": "Introducing record class to only customer-service to start with\n\nI am creating a smaller PR and have Included record to only the customer-service Microservices.\nWill apply to other micro services if this looks good.",
+        "title": "Introducing record class to only customer-service to start with",
+        "issue_text": "Introducing record class to only customer-service to start with\n\nI am creating a smaller PR and have Included record to only the customer-service Microservices.\nWill apply to other micro services if this looks good."
+      },
+      "meta": {
+        "is_pr_text": true,
+        "gold_count": 5,
+        "changed_lines": 139
+      },
+      "flags": {
+        "mentions_gold_path": false
+      },
+      "stats": {
+        "gold_files": 5,
+        "gold_sites": 0,
+        "changed_lines": 139,
+        "problem_chars": 215
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-impact-39f6670e-save",
+      "task": "impact",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "81a1cc0c7ecdf7a750695bd8f9344ab443b4cbf3",
+      "fix_commit": "39f6670e009a66e4b730d4e777e25a8ff7951a59",
+      "fix_date": "2024-01-05",
+      "issue_ref": "#253",
+      "title": "What code is affected if `save` changes?",
+      "problem_statement": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/boundary/web/ApiGatewayController.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+          "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+            "line": 52,
+            "end_line": 54,
+            "name": "createOwner",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+            "line": 77,
+            "end_line": 89,
+            "name": "updateOwner",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 53,
+            "end_line": 63,
+            "name": "processCreationForm",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 67,
+            "end_line": 71,
+            "name": "processUpdateForm",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java",
+            "line": 55,
+            "end_line": 62,
+            "name": "create",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/boundary/web/ApiGatewayController.java",
+            "line": 49,
+            "end_line": 60,
+            "name": "getOwnerDetails",
+            "kind": "method"
+          }
+        ]
+      },
+      "query": {
+        "text": "What code is affected if `save` changes?",
+        "title": "What code is affected if `save` changes?",
+        "issue_text": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+        "symbol": "save",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "save",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 73,
+        "symbol_end_line": 83,
+        "gold_count": 4,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 4,
+        "gold_sites": 6,
+        "problem_chars": 138
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-dependents-39f6670e-owner",
+      "task": "dependents",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "81a1cc0c7ecdf7a750695bd8f9344ab443b4cbf3",
+      "fix_commit": "39f6670e009a66e4b730d4e777e25a8ff7951a59",
+      "fix_date": "2024-01-05",
+      "issue_ref": "#253",
+      "title": "Which files import `spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java`?",
+      "problem_statement": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {},
+        "sites": []
+      },
+      "query": {
+        "text": "Which files import `spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java`?",
+        "title": "Which files import `spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java`?",
+        "issue_text": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
+        "language": "java"
+      },
+      "meta": {
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
+        "gold_count": 2,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 2,
+        "gold_sites": 0,
+        "problem_chars": 138
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-callers-39f6670e-save",
+      "task": "callers",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "81a1cc0c7ecdf7a750695bd8f9344ab443b4cbf3",
+      "fix_commit": "39f6670e009a66e4b730d4e777e25a8ff7951a59",
+      "fix_date": "2024-01-05",
+      "issue_ref": "#253",
+      "title": "Find all callers of `save`.",
+      "problem_statement": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+          "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+            "line": 52,
+            "end_line": 54,
+            "name": "createOwner",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+            "line": 77,
+            "end_line": 89,
+            "name": "updateOwner",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 53,
+            "end_line": 63,
+            "name": "processCreationForm",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 67,
+            "end_line": 71,
+            "name": "processUpdateForm",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java",
+            "line": 55,
+            "end_line": 62,
+            "name": "create",
+            "kind": "method"
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all callers of `save`.",
+        "title": "Find all callers of `save`.",
+        "issue_text": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+        "symbol": "save",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "save",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 73,
+        "symbol_end_line": 83,
+        "gold_count": 3,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 3,
+        "gold_sites": 5,
+        "problem_chars": 138
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-callees-a3f9d06d-processcreationform",
+      "task": "callees",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_commit": "a3f9d06d36d7183b8e7a957d4d93d2dfc884f5ae",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Find all functions called by `processCreationForm`.",
+      "problem_statement": "Add validation to reject future pet birth dates",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Pet.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/ResourceNotFoundException.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/ResourceNotFoundException.java",
+            "line": 7,
+            "end_line": 13,
+            "name": "ResourceNotFoundException",
+            "kind": "class"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Pet.java",
+            "line": 36,
+            "end_line": 124,
+            "name": "Pet",
+            "kind": "class"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
+            "line": 82,
+            "end_line": 85,
+            "name": "addPet",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 77,
+            "end_line": 87,
+            "name": "save",
+            "kind": "method"
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all functions called by `processCreationForm`.",
+        "title": "Find all functions called by `processCreationForm`.",
+        "issue_text": "Add validation to reject future pet birth dates",
+        "symbol": "processCreationForm",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "processCreationForm",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 57,
+        "symbol_end_line": 67,
+        "gold_count": 4,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 4,
+        "gold_sites": 4,
+        "problem_chars": 47
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-callees-1e7ecb8b-processupdateform",
+      "task": "callees",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Find all functions called by `processUpdateForm`.",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 95,
+            "end_line": 98,
+            "name": "findPetById",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 76,
+            "end_line": 86,
+            "name": "save",
+            "kind": "method"
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all functions called by `processUpdateForm`.",
+        "title": "Find all functions called by `processUpdateForm`.",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "processUpdateForm",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "processUpdateForm",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 70,
+        "symbol_end_line": 74,
+        "gold_count": 1,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-symbol_definition-ea8e0f90-customerforgotpasswordsecuritytokenimpl",
+      "task": "symbol_definition",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Where is `CustomerForgotPasswordSecurityTokenImpl` defined?",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3152",
+      "gold": {
+        "files": [
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+            "line": 38,
+            "end_line": 123,
+            "name": "CustomerForgotPasswordSecurityTokenImpl",
+            "kind": "class"
+          }
+        ]
+      },
+      "query": {
+        "text": "Where is `CustomerForgotPasswordSecurityTokenImpl` defined?",
+        "title": "Where is `CustomerForgotPasswordSecurityTokenImpl` defined?",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "symbol_kind": "class",
+        "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "file": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "symbol_kind": "class",
+        "symbol_path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "symbol_line": 38,
+        "symbol_end_line": 123,
+        "gold_count": 1,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-symbol_definition-0594405a-adminauditablelistener",
+      "task": "symbol_definition",
+      "repo": "BroadleafCommerce",
+      "base_commit": "5036306fcbd95180135a9ce0dc16b574f032936b",
+      "fix_commit": "0594405a26983e78d5296298964d3b08f4e1c72b",
+      "fix_date": "2026-09-30",
+      "issue_ref": "#5495",
+      "title": "Where is `AdminAuditableListener` defined?",
+      "problem_statement": "BroadleafCommerce/QA#5495 - Set admin audit creation data for entities with an embedded auditable (#3147)",
+      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3147",
+      "gold": {
+        "files": [
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+            "line": 31,
+            "end_line": 73,
+            "name": "AdminAuditableListener",
+            "kind": "class"
+          }
+        ]
+      },
+      "query": {
+        "text": "Where is `AdminAuditableListener` defined?",
+        "title": "Where is `AdminAuditableListener` defined?",
+        "issue_text": "BroadleafCommerce/QA#5495 - Set admin audit creation data for entities with an embedded auditable (#3147)",
+        "symbol": "AdminAuditableListener",
+        "symbol_kind": "class",
+        "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+        "file": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "AdminAuditableListener",
+        "symbol_kind": "class",
+        "symbol_path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+        "symbol_line": 31,
+        "symbol_end_line": 73,
+        "gold_count": 1,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 105
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-loc-ea8e0f90",
+      "task": "localization",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Add customer username and password token indexes (#5504) - 7.0.x",
+      "problem_statement": "Add customer username and password token indexes (#5504) - 7.0.x\n\n7.0.x backport of #3151\n\n**A Brief Overview**\nAdds two indexes to fix full table scans in core customer lookups: `CUSTOMER_USERNAME_INDEX` on `BLC_CUSTOMER.USER_NAME` (lookup by username), and `CUST_PWD_TOKEN_CUST_USED_IDX` on `BLC_CUSTOMER_PASSWORD_TOKEN (CUSTOMER_ID, TOKEN_USED_FLAG)` (unused forgot-password tokens). Suggested by Flywire. Release notes need the matching `CREATE INDEX` DDL for sites that don't run `hbm2ddl=update`.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5504",
+      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3152",
+      "gold": {
+        "files": [
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java"
+        ],
+        "hunks": {
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java": [
+            [
+              26,
+              26
+            ],
+            [
+              38,
+              39
+            ]
+          ],
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java": [
+            [
+              79,
+              80
+            ]
+          ]
+        },
+        "sites": []
+      },
+      "query": {
+        "text": "Add customer username and password token indexes (#5504) - 7.0.x\n\n7.0.x backport of #3151\n\n**A Brief Overview**\nAdds two indexes to fix full table scans in core customer lookups: `CUSTOMER_USERNAME_INDEX` on `BLC_CUSTOMER.USER_NAME` (lookup by username), and `CUST_PWD_TOKEN_CUST_USED_IDX` on `BLC_CUSTOMER_PASSWORD_TOKEN (CUSTOMER_ID, TOKEN_USED_FLAG)` (unused forgot-password tokens). Suggested by Flywire. Release notes need the matching `CREATE INDEX` DDL for sites that don't run `hbm2ddl=update`.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5504",
+        "title": "Add customer username and password token indexes (#5504) - 7.0.x",
+        "issue_text": "Add customer username and password token indexes (#5504) - 7.0.x\n\n7.0.x backport of #3151\n\n**A Brief Overview**\nAdds two indexes to fix full table scans in core customer lookups: `CUSTOMER_USERNAME_INDEX` on `BLC_CUSTOMER.USER_NAME` (lookup by username), and `CUST_PWD_TOKEN_CUST_USED_IDX` on `BLC_CUSTOMER_PASSWORD_TOKEN (CUSTOMER_ID, TOKEN_USED_FLAG)` (unused forgot-password tokens). Suggested by Flywire. Release notes need the matching `CREATE INDEX` DDL for sites that don't run `hbm2ddl=update`.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5504"
+      },
+      "meta": {
+        "is_pr_text": true,
+        "gold_count": 2,
+        "changed_lines": 7
+      },
+      "flags": {
+        "mentions_gold_path": false
+      },
+      "stats": {
+        "gold_files": 2,
+        "gold_sites": 0,
+        "changed_lines": 7,
+        "problem_chars": 550
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-loc-0594405a",
+      "task": "localization",
+      "repo": "BroadleafCommerce",
+      "base_commit": "5036306fcbd95180135a9ce0dc16b574f032936b",
+      "fix_commit": "0594405a26983e78d5296298964d3b08f4e1c72b",
+      "fix_date": "2026-09-30",
+      "issue_ref": "#5495",
+      "title": "Set admin audit creation data for entities with an embedded auditable (#5495)",
+      "problem_statement": "Set admin audit creation data for entities with an embedded auditable (#5495)\n\n**A Brief Overview**\n7.0.x backport of #3146. `AdminAuditableListener` only set `dateCreated`/`createdBy` on persist when the entity itself implemented `AdminAudit` (a check added in #3106 for BroadleafCommerce/QA#5442), so entities that hold an embedded `AdminAuditable` were saved without creation audit data. The \"already set\" check now also looks at the embedded auditable, so creation data is populated again while existing values are still preserved; covered by a new Spock spec.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5495",
+      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3147",
+      "gold": {
+        "files": [
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java"
+        ],
+        "hunks": {
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java": [
+            [
+              24,
+              24
+            ],
+            [
+              41,
+              41
+            ],
+            [
+              48,
+              69
+            ]
+          ]
+        },
+        "sites": []
+      },
+      "query": {
+        "text": "Set admin audit creation data for entities with an embedded auditable (#5495)\n\n**A Brief Overview**\n7.0.x backport of #3146. `AdminAuditableListener` only set `dateCreated`/`createdBy` on persist when the entity itself implemented `AdminAudit` (a check added in #3106 for BroadleafCommerce/QA#5442), so entities that hold an embedded `AdminAuditable` were saved without creation audit data. The \"already set\" check now also looks at the embedded auditable, so creation data is populated again while existing values are still preserved; covered by a new Spock spec.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5495",
+        "title": "Set admin audit creation data for entities with an embedded auditable (#5495)",
+        "issue_text": "Set admin audit creation data for entities with an embedded auditable (#5495)\n\n**A Brief Overview**\n7.0.x backport of #3146. `AdminAuditableListener` only set `dateCreated`/`createdBy` on persist when the entity itself implemented `AdminAudit` (a check added in #3106 for BroadleafCommerce/QA#5442), so entities that hold an embedded `AdminAuditable` were saved without creation audit data. The \"already set\" check now also looks at the embedded auditable, so creation data is populated again while existing values are still preserved; covered by a new Spock spec.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5495"
+      },
+      "meta": {
+        "is_pr_text": true,
+        "gold_count": 1,
+        "changed_lines": 25
+      },
+      "flags": {
+        "mentions_gold_path": false
+      },
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 0,
+        "changed_lines": 25,
+        "problem_chars": 612
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-callers-ea8e0f90-customerforgotpasswordsecuritytokenimpl",
+      "task": "callers",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3152",
+      "gold": {
+        "files": [
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java",
+            "line": 362,
+            "end_line": 393,
+            "name": "sendForgotPasswordNotification",
+            "kind": "method"
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
+        "title": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "symbol_kind": "class",
+        "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "file": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "symbol_kind": "class",
+        "symbol_path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "symbol_line": 38,
+        "symbol_end_line": 123,
+        "gold_count": 1,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-callers-d7bcd8c7-addactivedaterestrictions",
+      "task": "callers",
+      "repo": "BroadleafCommerce",
+      "base_commit": "b42a60945e0e564c51e852a637172f83ad48d365",
+      "fix_commit": "d7bcd8c747ae2a90e0455d535717d879323cba11",
+      "fix_date": "2026-05-04",
+      "issue_ref": "#3118",
+      "title": "Find all callers of `addActiveDateRestrictions`.",
+      "problem_statement": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 123,
+            "end_line": 140,
+            "name": "findPageByURI",
+            "kind": "method"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 180,
+            "end_line": 199,
+            "name": "findPageByURIAndActiveDate",
+            "kind": "method"
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all callers of `addActiveDateRestrictions`.",
+        "title": "Find all callers of `addActiveDateRestrictions`.",
+        "issue_text": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+        "symbol": "addActiveDateRestrictions",
+        "symbol_kind": "method",
+        "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "file": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "addActiveDateRestrictions",
+        "symbol_kind": "method",
+        "symbol_path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "symbol_line": 142,
+        "symbol_end_line": 155,
+        "gold_count": 1,
+        "heuristic_ground_truth": true
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
+        "problem_chars": 100
+      }
+    }
+  ]
+}

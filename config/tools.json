@@ -1,0 +1,381 @@
+{
+  "version": 1,
+  "defaults": {
+    "top_k": 10,
+    "timeout": 300,
+    "prepare_timeout": 900,
+    "cleanup_timeout": 60
+  },
+  "plugins": [],
+  "tools": {
+    "codegraph": {
+      "enabled": true,
+      "kind": "symbol-graph",
+      "description": "CodeGraph AST/graph index (query, callers, callees, impact)",
+      "binary": "codegraph",
+      "cwd": "{repo}",
+      "prepare": [
+        "codegraph",
+        "init",
+        "{repo}"
+      ],
+      "prepare_timeout": 900,
+      "timeout": 300,
+      "version": [
+        "codegraph",
+        "-V"
+      ],
+      "has_lines": true,
+      "parse": "recursive_json",
+      "queries": {
+        "localization": [
+          "codegraph",
+          "query",
+          "{query}",
+          "-p",
+          "{repo}",
+          "-l",
+          "{k}",
+          "-j"
+        ],
+        "symbol_definition": [
+          "codegraph",
+          "query",
+          "{symbol}",
+          "-p",
+          "{repo}",
+          "-l",
+          "{k}",
+          "-j"
+        ],
+        "callers": [
+          "codegraph",
+          "callers",
+          "{symbol}",
+          "-p",
+          "{repo}",
+          "-l",
+          "{k}",
+          "-j"
+        ],
+        "callees": [
+          "codegraph",
+          "callees",
+          "{symbol}",
+          "-p",
+          "{repo}",
+          "-l",
+          "{k}",
+          "-j"
+        ],
+        "impact": [
+          "codegraph",
+          "impact",
+          "{symbol}",
+          "-p",
+          "{repo}",
+          "-d",
+          "{depth}",
+          "-j"
+        ],
+        "dependents": {
+          "argv": [
+            "codegraph",
+            "node",
+            "-f",
+            "{path}",
+            "--symbols-only",
+            "-p",
+            "{repo}"
+          ],
+          "parse": "codegraph_dependents"
+        }
+      }
+    },
+    "codebase-memory-mcp": {
+      "enabled": true,
+      "kind": "graph+keyword",
+      "description": "codebase-memory graph + literal/regex source search. Full indexes keep semantic data; localization fuses per-term search_code and semantic search_graph with weighted RRF.",
+      "binary": "codebase-memory-mcp",
+      "cwd": "{repo}",
+      "query_mode": "keywords",
+      "prepare": [
+        "codebase-memory-mcp",
+        "cli",
+        "index_repository",
+        "--repo-path",
+        "{repo}",
+        "--mode",
+        "full",
+        "--persistence",
+        "true"
+      ],
+      "prepare_timeout": 1800,
+      "cleanup": [
+        "codebase-memory-mcp",
+        "cli",
+        "delete_project",
+        "--project",
+        "{repo}"
+      ],
+      "timeout": 300,
+      "version": [
+        "codebase-memory-mcp",
+        "--version"
+      ],
+      "has_lines": true,
+      "parse": "cbm",
+      "queries": {
+        "localization": {
+          "runner": "cbm_fusion",
+          "text_weight": 0.6,
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "search_code",
+            "--project",
+            "{repo}",
+            "--pattern",
+            "{keywords_regex}",
+            "--regex",
+            "true",
+            "--mode",
+            "compact",
+            "--limit",
+            "20",
+            "--source-max-lines",
+            "0",
+            "--file-pattern",
+            "{file_pattern}",
+            "--format",
+            "json"
+          ],
+          "semantic_argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "search_graph",
+            "--project",
+            "{repo}",
+            "--semantic-query",
+            "{semantic_query}",
+            "--semantic-limit",
+            "50",
+            "--limit",
+            "50",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm"
+        },
+        "symbol_definition": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "search_graph",
+            "--project",
+            "{repo}",
+            "--name-pattern",
+            "^{symbol}$",
+            "--limit",
+            "{k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm"
+        },
+        "callers": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "query_graph",
+            "--project",
+            "{repo}",
+            "--query",
+            "MATCH (a)-[:CALLS]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, b.name LIMIT {k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm_query"
+        },
+        "callees": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "query_graph",
+            "--project",
+            "{repo}",
+            "--query",
+            "MATCH (a {name:\"{symbol}\"})-[:CALLS]->(b) RETURN b.name, b.file_path, a.name LIMIT {k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm_query"
+        },
+        "impact": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "query_graph",
+            "--project",
+            "{repo}",
+            "--query",
+            "MATCH (a)-[:CALLS*1..{depth}]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, b.name LIMIT {k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm_query"
+        }
+      }
+    },
+    "rg": {
+      "enabled": true,
+      "kind": "keyword",
+      "description": "ripgrep baseline: weighted identifiers for localization, literal symbol matches, and textual call-site search.",
+      "binary": "rg",
+      "query_mode": "keywords",
+      "timeout": 300,
+      "version": [
+        "rg",
+        "--version"
+      ],
+      "has_lines": false,
+      "parse": "rg",
+      "queries": {
+        "localization": {
+          "runner": "rg_localization"
+        },
+        "symbol_definition": {
+          "runner": "rg_symbol"
+        },
+        "callers": {
+          "runner": "rg_callers"
+        }
+      }
+    },
+    "semble": {
+      "enabled": false,
+      "kind": "semantic",
+      "description": "Semble chunk search (embeddings + BM25 hybrid)",
+      "binary": "semble",
+      "prepare": [
+        "semble",
+        "search",
+        "warmup",
+        "{repo}",
+        "-k",
+        "1",
+        "--max-snippet-lines",
+        "0"
+      ],
+      "prepare_timeout": 900,
+      "timeout": 600,
+      "version": [
+        "semble",
+        "-V"
+      ],
+      "has_lines": true,
+      "parse": "semble",
+      "queries": {
+        "localization": [
+          "semble",
+          "search",
+          "{query}",
+          "{repo}",
+          "-k",
+          "{k}",
+          "--max-snippet-lines",
+          "0",
+          "--format",
+          "json",
+          "--content",
+          "code"
+        ],
+        "symbol_definition": [
+          "semble",
+          "search",
+          "{symbol}",
+          "{repo}",
+          "-k",
+          "{k}",
+          "--max-snippet-lines",
+          "0",
+          "--format",
+          "json",
+          "--content",
+          "code"
+        ]
+      }
+    },
+    "semble-graph": {
+      "enabled": false,
+      "kind": "graph+semantic",
+      "description": "Semble search expanded over the Semble graph sidecar",
+      "binary": "semble-graph",
+      "prepare": [
+        "semble-graph",
+        "build",
+        "{repo}",
+        "--format",
+        "json"
+      ],
+      "prepare_timeout": 900,
+      "timeout": 600,
+      "version": [
+        "semble-graph",
+        "-V"
+      ],
+      "has_lines": true,
+      "parse": "semble",
+      "queries": {
+        "localization": [
+          "semble-graph",
+          "search",
+          "{query}",
+          "{repo}",
+          "-k",
+          "{k}",
+          "--max-snippet-lines",
+          "0",
+          "--format",
+          "json",
+          "--content",
+          "code"
+        ]
+      }
+    },
+    "code-search": {
+      "enabled": false,
+      "kind": "graph+semantic",
+      "description": "code-search hybrid graph/vector/lexical engine",
+      "binary": "code-search",
+      "cwd": "{repo}",
+      "prepare": [
+        "code-search",
+        "index",
+        "--path",
+        ".",
+        "--no-daemon"
+      ],
+      "prepare_timeout": 1800,
+      "timeout": 600,
+      "has_lines": true,
+      "parse": "code_search",
+      "queries": {
+        "localization": [
+          "code-search",
+          "search",
+          "{query}",
+          "--paths-only",
+          "--json",
+          "--limit",
+          "{k}",
+          "--no-daemon",
+          "--no-include-tests",
+          "--allow-weak",
+          "--content",
+          "code"
+        ]
+      }
+    }
+  }
+}

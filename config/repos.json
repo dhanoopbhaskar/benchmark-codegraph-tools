@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "repos": {
+    "BroadleafCommerce": {
+      "enabled": true,
+      "path": "../BroadleafCommerce",
+      "language": "java",
+      "include": [
+        "**/*.java"
+      ],
+      "exclude": [
+        "**/src/test/**",
+        "**/src/it/**",
+        "**/target/**",
+        "**/build/**"
+      ],
+      "test_markers": [
+        "**/src/test/**",
+        "**/src/it/**"
+      ],
+      "max_file_bytes": 2000000
+    },
+    "spring-petclinic-microservices": {
+      "enabled": true,
+      "path": "../spring-petclinic-microservices",
+      "language": "java",
+      "include": [
+        "**/*.java"
+      ],
+      "exclude": [
+        "**/src/test/**",
+        "**/src/it/**",
+        "**/target/**",
+        "**/build/**"
+      ],
+      "test_markers": [
+        "**/src/test/**",
+        "**/src/it/**"
+      ],
+      "max_file_bytes": 2000000
+    }
+  }
+}

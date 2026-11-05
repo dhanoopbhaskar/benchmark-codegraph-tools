@@ -1,0 +1,125 @@
+{
+  "version": 1,
+  "mining": {
+    "since": "2022-01-01",
+    "scan": 400,
+    "max_files": 6,
+    "max_lines": 400,
+    "min_lines": 2,
+    "min_problem_chars": 200,
+    "max_problem_chars": 8000,
+    "exclude_subject": "(?i)\\b(upgrade|bump|refactor|cleanup|clean up|migrate|reformat|typo|lint)\\b",
+    "symbols_per_commit": 1
+  },
+  "tasks": {
+    "localization": {
+      "enabled": true,
+      "description": "Issue/PR text -> production files and line hunks changed by the fix commit. The original bench/ task, generalised to any configured repository and language.",
+      "miner": "git_issue",
+      "scorer": "localization",
+      "query_source": "issue",
+      "allow_default_query": true,
+      "metrics": [
+        "recall@1",
+        "recall@3",
+        "recall@5",
+        "recall@10",
+        "mrr@10",
+        "hunk@5"
+      ]
+    },
+    "symbol_definition": {
+      "enabled": true,
+      "description": "Given a symbol changed by a fix, return its definition file and line. Ground truth is the declaration site in the base tree.",
+      "miner": "structural",
+      "scorer": "site",
+      "query_source": "structural",
+      "query_template": "Where is `{symbol}` defined?",
+      "metrics": [
+        "hit@1",
+        "hit@3",
+        "hit@5",
+        "mrr@10"
+      ],
+      "symbols_per_commit": 1,
+      "min_gold_files": 1,
+      "max_gold_files": 5
+    },
+    "callers": {
+      "enabled": true,
+      "description": "Given a symbol changed by a fix, return the files that call it. Gold is derived from textual call sites at the base commit.",
+      "miner": "structural",
+      "scorer": "set",
+      "query_source": "structural",
+      "query_template": "Find all callers of `{symbol}`.",
+      "metrics": [
+        "recall@5",
+        "recall@10",
+        "all@10",
+        "hit@10",
+        "precision@10",
+        "mrr@10"
+      ],
+      "symbols_per_commit": 1,
+      "min_gold_files": 1,
+      "max_gold_files": 30
+    },
+    "callees": {
+      "enabled": true,
+      "description": "Given a symbol changed by a fix, return the files that define the symbols it calls.",
+      "miner": "structural",
+      "scorer": "set",
+      "query_source": "structural",
+      "query_template": "Find all functions called by `{symbol}`.",
+      "metrics": [
+        "recall@5",
+        "recall@10",
+        "all@10",
+        "hit@10",
+        "precision@10",
+        "mrr@10"
+      ],
+      "symbols_per_commit": 1,
+      "min_gold_files": 1,
+      "max_gold_files": 30
+    },
+    "impact": {
+      "enabled": true,
+      "description": "Given a symbol changed by a fix, return the files affected by changing it (transitive callers up to --impact-depth).",
+      "miner": "structural",
+      "scorer": "set",
+      "query_source": "structural",
+      "query_template": "What code is affected if `{symbol}` changes?",
+      "metrics": [
+        "recall@5",
+        "recall@10",
+        "all@10",
+        "hit@10",
+        "mrr@10"
+      ],
+      "symbols_per_commit": 1,
+      "impact_depth": 2,
+      "min_gold_files": 1,
+      "max_gold_files": 40
+    },
+    "dependents": {
+      "enabled": true,
+      "description": "Given a file changed by a fix, return the files that import it. Gold is derived from the base tree's import graph.",
+      "miner": "structural",
+      "scorer": "set",
+      "query_source": "structural",
+      "query_template": "Which files import `{path}`?",
+      "metrics": [
+        "recall@5",
+        "recall@10",
+        "all@10",
+        "hit@10",
+        "precision@10",
+        "mrr@10"
+      ],
+      "symbols_per_commit": 1,
+      "min_gold_files": 1,
+      "max_gold_files": 40
+    }
+  }
+}
