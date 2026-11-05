@@ -74,7 +74,8 @@ def validate(home: BenchHome) -> tuple[list[str], list[str]]:
             continue
         gold = instance.get("gold") or {}
         files = gold.get("files") or []
-        if not files:
+        scorer = (tasks.get(task) or {}).get("scorer")
+        if not files and scorer != "absence":
             errors.append(f"{instance_id}: no gold files")
         for path in files:
             if not gitutil.file_exists_at(repo_path, base, path):
@@ -83,10 +84,20 @@ def validate(home: BenchHome) -> tuple[list[str], list[str]]:
             path = site.get("path")
             if path and not gitutil.file_exists_at(repo_path, base, path):
                 errors.append(f"{instance_id}: gold site not present at base: {path}")
+        for edge in gold.get("edges") or []:
+            path = edge.get("path")
+            if path and not gitutil.file_exists_at(repo_path, base, path):
+                errors.append(
+                    f"{instance_id}: gold edge path not present at base: {path}"
+                )
         if not (instance.get("query") or {}).get("text") and not instance.get("problem_statement"):
             errors.append(f"{instance_id}: empty query")
-        if task in tasks and tasks[task].get("scorer") == "site" and not (gold.get("sites") or []):
+        if task in tasks and tasks[task].get("scorer") in {"site", "sites"} and not (gold.get("sites") or []):
             errors.append(f"{instance_id}: site-scored task has no gold sites")
+        if task in tasks and tasks[task].get("scorer") == "sites" and len(gold.get("sites") or []) < 2:
+            errors.append(f"{instance_id}: 'sites' task needs at least two gold sites")
+        if task in tasks and tasks[task].get("scorer") == "absence" and files:
+            errors.append(f"{instance_id}: absence task must have an empty gold set")
 
     return errors, warnings
 

@@ -62,6 +62,7 @@ class Symbol:
     end_line: int          # 1-based inclusive end line
     has_body: bool
     language: str
+    super_types: tuple[str, ...] = ()
 
     @property
     def is_callable(self) -> bool:
@@ -80,6 +81,7 @@ class Symbol:
             "end_line": self.end_line,
             "has_body": self.has_body,
             "language": self.language,
+            "super_types": list(self.super_types),
         }
 
     def key(self) -> tuple:
@@ -224,6 +226,39 @@ def _indent_end_line(lines: list[str], start_line: int, indent: int) -> int:
     return last
 
 
+def _clean_type_name(value: str) -> str:
+    """Reduce ``pkg.Outer<T>.Inner`` to a comparable simple type name."""
+    value = re.sub(r"<[^>]*>", "", value or "")
+    value = value.strip().strip(".")
+    if not value:
+        return ""
+    return re.split(r"[.\s]+", value)[-1].strip()
+
+
+def _split_type_list(value: str | None) -> tuple[str, ...]:
+    output: list[str] = []
+    for part in (value or "").split(","):
+        name = _clean_type_name(part)
+        if name and name not in {"Object", "Any", "object"} and name not in output:
+            output.append(name)
+    return tuple(output)
+
+
+def _java_super_types(masked: str, match: re.Match) -> tuple[str, ...]:
+    """Extract ``extends``/``implements`` names from a Java type header."""
+    brace = masked.find("{", match.end())
+    semicolon = masked.find(";", match.end())
+    stops = [value for value in (brace, semicolon) if value >= 0]
+    stop = min(stops) + 1 if stops else match.end() + 400
+    header = masked[match.end(): stop]
+    names: list[str] = []
+    for pattern in (JAVA_EXTENDS, JAVA_IMPLEMENTS):
+        found = pattern.search(header)
+        if found:
+            names.extend(_split_type_list(found.group(1)))
+    return tuple(dict.fromkeys(names))
+
+
 def _add_symbol(
     bucket: list[Symbol],
     seen: set[tuple],
@@ -234,10 +269,14 @@ def _add_symbol(
     end_line: int,
     has_body: bool,
     language: str,
+    super_types: tuple[str, ...] = (),
 ) -> None:
     if not name or line < 1:
         return
-    symbol = Symbol(name, kind, path, line, max(line, end_line), has_body, language)
+    symbol = Symbol(
+        name, kind, path, line, max(line, end_line), has_body, language,
+        tuple(super_types),
+    )
     if symbol.key() in seen:
         return
     seen.add(symbol.key())
@@ -245,6 +284,12 @@ def _add_symbol(
 
 
 JAVA_TYPE = re.compile(r"\b(class|interface|enum|record)\s+([A-Za-z_$][\w$]*)")
+JAVA_EXTENDS = re.compile(
+    r"\bextends\s+([\w.$<>,?\s]+?)(?=\bimplements\b|\bpermits\b|\{)"
+)
+JAVA_IMPLEMENTS = re.compile(
+    r"\bimplements\s+([\w.$<>,?\s]+?)(?=\bpermits\b|\{)"
+)
 JAVA_METHOD = re.compile(
     r"(?m)^[ \t]*(?:(?:@[\w$.]+(?:\([^)\n]*\))?\s*)*)"
     r"(?:(?:public|protected|private|static|final|abstract|synchronized|native|default|strictfp)\s+)*"
@@ -257,9 +302,15 @@ JAVA_CTOR = re.compile(
     r"([A-Z][A-Za-z0-9_$]*)\s*\("
 )
 PY_DEF = re.compile(r"(?m)^([ \t]*)(?:async\s+)?def\s+([A-Za-z_]\w*)\s*\(")
-PY_CLASS = re.compile(r"(?m)^([ \t]*)class\s+([A-Za-z_]\w*)")
+PY_CLASS = re.compile(
+    r"(?m)^([ \t]*)class\s+([A-Za-z_]\w*)\s*(?:\(([^)\n]*)\))?\s*:"
+)
 JS_FUNCTION = re.compile(r"\bfunction\s+([A-Za-z_$][\w$]*)\s*\(")
-JS_CLASS = re.compile(r"\bclass\s+([A-Za-z_$][\w$]*)\b")
+JS_CLASS = re.compile(
+    r"\bclass\s+([A-Za-z_$][\w$]*)\s*"
+    r"(?:extends\s+([A-Za-z_$][\w$]*))?\s*"
+    r"(?:implements\s+([A-Za-z_$][\w$.,\s]*?))?\s*\{"
+)
 JS_ARROW = re.compile(
     r"\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?"
     r"(?:\([^)\n]*\)|[A-Za-z_$][\w$]*)\s*=>"
@@ -298,7 +349,10 @@ def parse_file(path: str, text: str, language: str) -> tuple[list[Symbol], list[
             line = _line_at(masked, match.start())
             end_line, has_body = _brace_end_line(masked, offsets, line)
             types.setdefault(name, line)
-            _add_symbol(symbols, seen, name, kind, path, line, end_line, has_body, language)
+            _add_symbol(
+                symbols, seen, name, kind, path, line, end_line, has_body,
+                language, _java_super_types(masked, match),
+            )
 
         for match in JAVA_METHOD.finditer(masked):
             return_type, name = match.group(1), match.group(2)
@@ -331,7 +385,10 @@ def parse_file(path: str, text: str, language: str) -> tuple[list[Symbol], list[
             name = match.group(2)
             line = _line_at(masked, match.start(2))
             end_line = _indent_end_line(lines, line, indent)
-            _add_symbol(symbols, seen, name, "class", path, line, end_line, True, language)
+            _add_symbol(
+                symbols, seen, name, "class", path, line, end_line, True,
+                language, _split_type_list(match.group(3)),
+            )
 
         for match in PY_IMPORT.finditer(masked):
             for part in match.group(1).split(","):
@@ -346,7 +403,11 @@ def parse_file(path: str, text: str, language: str) -> tuple[list[Symbol], list[
             name = match.group(1)
             line = _line_at(masked, match.start(1))
             end_line, has_body = _brace_end_line(masked, offsets, line)
-            _add_symbol(symbols, seen, name, "class", path, line, end_line, has_body, language)
+            supers = _split_type_list(match.group(2)) + _split_type_list(match.group(3))
+            _add_symbol(
+                symbols, seen, name, "class", path, line, end_line, has_body,
+                language, tuple(dict.fromkeys(supers)),
+            )
         for match in JS_FUNCTION.finditer(masked):
             name = match.group(1)
             line = _line_at(masked, match.start(1))
@@ -418,6 +479,9 @@ class RepoIndex:
         self.module_to_path: dict[str, str] = {}
         self.edges: list[tuple[Symbol, str, int]] = []
         self.calls_by_name: dict[str, list[Symbol]] = {}
+        self.subtypes_by_name: dict[str, list[Symbol]] = {}
+        self.container_by_symbol: dict[tuple, Symbol] = {}
+        self._name_counts: dict[str, int] | None = None
         self._parse()
 
     # ------------------------------------------------------------------ scan
@@ -482,6 +546,7 @@ class RepoIndex:
 
         self._build_call_edges()
         self._build_import_graph()
+        self._build_type_hierarchy()
 
     # --------------------------------------------------------------- symbols
     def symbols_in_file(self, path: str) -> list[Symbol]:
@@ -493,6 +558,158 @@ class RepoIndex:
         if len(unique) != 1:
             return None
         return next(iter(unique.values()))
+
+    def symbols_named(self, name: str) -> list[Symbol]:
+        unique = {(symbol.path, symbol.line): symbol for symbol in self.by_name.get(name, [])}
+        return sorted(unique.values(), key=lambda item: (item.path, item.line))
+
+    def name_counts(self) -> dict[str, int]:
+        """Lazily count masked identifier occurrences across the whole tree."""
+        if self._name_counts is not None:
+            return self._name_counts
+        counts: dict[str, int] = {}
+        pattern = re.compile(r"\b[A-Za-z_$][\w$]*\b")
+        for path in self.files:
+            try:
+                text = (self.root / path).read_text(
+                    encoding="utf-8", errors="ignore"
+                )
+            except OSError:
+                continue
+            for match in pattern.finditer(mask_code(text, detect_language(path))):
+                name = match.group(0)
+                counts[name] = counts.get(name, 0) + 1
+        self._name_counts = counts
+        return counts
+
+    def occurrence_count(self, name: str) -> int:
+        return self.name_counts().get(name, 0)
+
+    def _build_type_hierarchy(self) -> None:
+        # Resolve the innermost type that contains each declaration. This gives
+        # methods and constructors a class/interface identity without a compiler.
+        for path, symbols in self.by_file.items():
+            types = [symbol for symbol in symbols if symbol.is_type]
+            for symbol in symbols:
+                containers = [
+                    parent for parent in types
+                    if parent.line <= symbol.line <= parent.end_line
+                    and parent.key() != symbol.key()
+                ]
+                if containers:
+                    self.container_by_symbol[symbol.key()] = max(
+                        containers, key=lambda item: item.line
+                    )
+            for symbol in types:
+                for parent_name in symbol.super_types:
+                    self.subtypes_by_name.setdefault(parent_name, []).append(symbol)
+
+    def container_of(self, symbol: Symbol) -> Symbol | None:
+        return self.container_by_symbol.get(symbol.key())
+
+    def subtypes(self, type_name: str, transitive: bool = True) -> list[Symbol]:
+        """Types that extend or implement *type_name* (direct or transitive)."""
+        output: dict[tuple, Symbol] = {}
+        frontier = [type_name]
+        seen_names = {type_name}
+        while frontier:
+            current = frontier.pop(0)
+            for child in self.subtypes_by_name.get(current, []):
+                if child.key() in output:
+                    continue
+                output[child.key()] = child
+                if transitive and child.name not in seen_names:
+                    seen_names.add(child.name)
+                    frontier.append(child.name)
+        return sorted(output.values(), key=lambda item: (item.path, item.line))
+
+    def implementations(self, type_name: str) -> list[Symbol]:
+        """Alias for subtypes; useful for interface/implementation queries."""
+        return self.subtypes(type_name)
+
+    def ambiguous_symbols(self) -> list[Symbol]:
+        """One representative for each name declared in more than one place."""
+        output: dict[str, Symbol] = {}
+        for name, symbols in self.by_name.items():
+            unique = {(item.path, item.line): item for item in symbols}
+            if len(unique) > 1 and name not in output:
+                output[name] = next(iter(unique.values()))
+        return list(output.values())
+
+    def parent_types(self) -> list[Symbol]:
+        """Types that actually have at least one known subtype."""
+        output: dict[str, Symbol] = {}
+        for name in self.subtypes_by_name:
+            if name not in output:
+                symbol = self.unique_symbol(name)
+                if symbol is not None and symbol.is_type:
+                    output[name] = symbol
+        return list(output.values())
+
+    def overridable_methods(self) -> list[Symbol]:
+        """Methods whose containing type has at least one subtype."""
+        parent_names = set(self.subtypes_by_name)
+        output: dict[tuple, Symbol] = {}
+        for symbol in self.symbols:
+            if not symbol.is_callable:
+                continue
+            container = self.container_of(symbol)
+            if container is None or container.name not in parent_names:
+                continue
+            if self.overrides(symbol):
+                output[symbol.key()] = symbol
+        return list(output.values())
+
+    def methods_in_type(self, type_symbol: Symbol) -> list[Symbol]:
+        return [
+            symbol for symbol in self.by_file.get(type_symbol.path, [])
+            if symbol.is_callable
+            and type_symbol.line <= symbol.line <= type_symbol.end_line
+        ]
+
+    def overrides(self, method: Symbol) -> list[Symbol]:
+        """Methods in subtypes with the same name as *method*."""
+        container = self.container_of(method)
+        if container is None:
+            return []
+        output: dict[tuple, Symbol] = {}
+        for subtype in self.subtypes(container.name):
+            for candidate in self.methods_in_type(subtype):
+                if candidate.name == method.name and candidate.key() != method.key():
+                    output[candidate.key()] = candidate
+        return sorted(output.values(), key=lambda item: (item.path, item.line))
+
+    # ------------------------------------------------------------ references
+    def references(self, target: Symbol) -> list[tuple[Symbol | None, int, str]]:
+        """All non-declaration occurrences of *target*'s name.
+
+        Returns ``(owning callable or None, line, path)`` tuples. Comments and
+        string literals are already masked by :func:`mask_code`.
+        """
+        pattern = re.compile(r"\b" + re.escape(target.name) + r"\b")
+        declaration_lines = {
+            (symbol.path, symbol.line)
+            for symbol in self.symbols_named(target.name)
+        }
+        output: list[tuple[Symbol | None, int, str]] = []
+        for path in self.files:
+            try:
+                text = (self.root / path).read_text(encoding="utf-8", errors="ignore")
+            except OSError:
+                continue
+            masked = mask_code(text, detect_language(path))
+            callables = [s for s in self.by_file.get(path, []) if s.is_callable]
+            for match in pattern.finditer(masked):
+                line = _line_at(masked, match.start())
+                if (path, line) in declaration_lines:
+                    continue
+                owner = None
+                for symbol in callables:
+                    if symbol.line <= line <= symbol.end_line:
+                        if owner is None or symbol.line > owner.line:
+                            owner = symbol
+                output.append((owner, line, path))
+        return output
 
     # ----------------------------------------------------------------- calls
     def _build_call_edges(self) -> None:
@@ -541,6 +758,74 @@ class RepoIndex:
                 continue
             output[caller.key()] = caller
         return list(output.values())
+
+    def caller_edges(self, target: Symbol) -> list[tuple[Symbol, int]]:
+        """``(caller, call_line)`` pairs for calls to *target*."""
+        unique_target = self.unique_symbol(target.name)
+        if unique_target is None:
+            return []
+        output: dict[tuple, tuple[Symbol, int]] = {}
+        for owner, name, line in self.edges:
+            if name != target.name or owner.key() == unique_target.key():
+                continue
+            output.setdefault((owner.path, owner.line, line), (owner, line))
+        return sorted(output.values(), key=lambda item: (item[0].path, item[1]))
+
+    def callee_edges(self, target: Symbol) -> list[tuple[Symbol, int]]:
+        """``(callee, call_line)`` pairs for calls made by *target*."""
+        output: dict[tuple, tuple[Symbol, int]] = {}
+        for owner, name, line in self.edges:
+            if owner.key() != target.key():
+                continue
+            resolved = self.unique_symbol(name)
+            if resolved is None or resolved.key() == target.key():
+                continue
+            output.setdefault((resolved.path, resolved.line, line), (resolved, line))
+        return sorted(output.values(), key=lambda item: (item[0].path, item[1]))
+
+    def impact_edges(self, target: Symbol, depth: int = 2) -> list[tuple[Symbol, Symbol, int]]:
+        """Transitive caller edges ``(caller, callee, line)`` up to *depth*."""
+        output: dict[tuple, tuple[Symbol, Symbol, int]] = {}
+        seen: set[tuple] = {target.key()}
+        frontier = [target]
+        for _ in range(max(1, depth)):
+            next_frontier: list[Symbol] = []
+            for current in frontier:
+                for caller, line in self.caller_edges(current):
+                    if caller.key() in seen:
+                        continue
+                    seen.add(caller.key())
+                    output[(caller.path, caller.line, current.name, line)] = (
+                        caller, current, line,
+                    )
+                    next_frontier.append(caller)
+            if not next_frontier:
+                break
+            frontier = next_frontier
+        return list(output.values())
+
+    def call_path(self, source: Symbol, target: Symbol, max_depth: int = 6):
+        """Shortest directed call path from *source* to *target*.
+
+        Returns a list of ``(owner, callee, line)`` hops, or ``[]`` if none.
+        """
+        if source.key() == target.key():
+            return []
+        queue: list[tuple[Symbol, list[tuple[Symbol, Symbol, int]]]] = [(source, [])]
+        visited: set[tuple] = {source.key()}
+        while queue:
+            current, path = queue.pop(0)
+            if len(path) >= max_depth:
+                continue
+            for callee, line in self.callee_edges(current):
+                hop = (current, callee, line)
+                if callee.key() == target.key():
+                    return path + [hop]
+                if callee.key() in visited:
+                    continue
+                visited.add(callee.key())
+                queue.append((callee, path + [hop]))
+        return []
 
     def callees(self, target: Symbol) -> list[Symbol]:
         """Definitions of symbols called from *target*'s body."""

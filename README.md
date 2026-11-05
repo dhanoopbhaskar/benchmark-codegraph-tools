@@ -193,8 +193,12 @@ python3 bench.py tools validate --name my-tool
 | `{repo_name}` | configured repository name |
 | `{query}` | issue text or structural query, depending on task |
 | `{symbol}` | symbol name for structural symbol tasks |
+| `{qualified_symbol}` | `FileStem.symbol` hint for disambiguation |
 | `{symbol_kind}` | `method`, `function`, `class`, ... |
+| `{symbol_path}` / `{symbol_line}` | declaration file and line |
 | `{path}` / `{file}` | repository-relative file path |
+| `{path_basename}` | basename of `{path}` |
+| `{source}` / `{target}` | source and target symbols for path tasks |
 | `{k}` / `{top_k}` | result limit |
 | `{keywords}` | space-separated identifiers from the query |
 | `{keywords_regex}` | `a|b|c` identifier regex |
@@ -213,6 +217,11 @@ python3 bench.py tools validate --name my-tool
 - `semble`, `code_search`, `codegraph` — named aliases/shapes.
 - `cbm` — codebase-memory `cols`/`rows` tables and `groups` (search_graph).
 - `cbm_query` — codebase-memory `query_graph` columns/rows.
+- `codegraph_callers` / `codegraph_callees` — CodeGraph relation arrays,
+  excluding the target definition (which generic JSON walking would wrongly
+  count as a result).
+- `codegraph_affected` — CodeGraph impact `affected` array, excluding roots.
+- `codegraph_dependents` — CodeGraph file-mode "used by N files" header.
 - `lines` / `text_paths` — plain-text output containing file paths.
 - `jsonl` — one JSON value per line.
 
@@ -225,10 +234,13 @@ Runners are Python functions for tools that are not a single command:
 
 - `rg_localization` — weighted distinct identifiers (the keyword baseline).
 - `rg_symbol` — literal symbol occurrences.
+- `rg_references` — literal identifier occurrences with lines.
 - `rg_callers` — textual call-like occurrences.
 - `cbm_fusion` — per-term `search_code` coverage fused with
   `search_graph --semantic-query` using weighted reciprocal-rank fusion for
   issue-text localization.
+- `cbm_references` — merges graph `CALLS`/`USAGE` edges with `search_code`
+  matches so declarations, imports, and annotations are not lost.
 
 A runner receives `(query_cfg, repo, ctx, repo_cfg, timeout)` and returns
 `(items, elapsed_seconds)`. Register custom runners as `"runner":
@@ -242,10 +254,15 @@ Tasks are data too. The shipped set:
 |---|---|---|---|
 | `localization` | issue/PR text | files + hunks changed by the fix | `localization` |
 | `symbol_definition` | symbol name | declaration site at `base_commit` | `site` |
-| `callers` | symbol name | files that call it | `set` |
-| `callees` | symbol name | files defining the symbols it calls | `set` |
-| `impact` | symbol name | files affected through transitive callers | `set` |
+| `symbol_definitions` | ambiguous symbol name | **every** declaration of that name | `sites` |
+| `callers` | symbol name | caller files, caller sites, call edges | `set` |
+| `callees` | symbol name | callee files, callee sites, call edges | `set` |
+| `impact` | symbol name | files/sites affected through transitive callers | `set` |
 | `dependents` | file path | files importing it | `set` |
+| `references` | symbol name | every non-declaration occurrence (calls, fields, types) | `set` |
+| `implementations` | type name | all direct/transitive subtypes | `set` |
+| `overrides` | method name | overriding methods in subtypes | `set` |
+| `no_callers` | symbol name | empty set (negative control) | `absence` |
 
 Example task definition:
 
@@ -343,20 +360,29 @@ changed file, the harness picks a declaration that overlaps a changed hunk, then
 uses the **base tree** to derive ground truth:
 
 - `symbol_definition` — the declaration site itself.
-- `callers` — symbols whose bodies contain a textual call to the target name.
-- `callees` — definitions of symbols called from the target body.
-- `impact` — transitive callers up to `impact_depth`.
+- `symbol_definitions` — every declaration of an ambiguous name (overloads,
+  same method in multiple classes); unlike the other tasks this deliberately
+  keeps ambiguous targets.
+- `callers` — caller symbols, caller sites, and `(file, caller, callee)` edges.
+- `callees` — callee symbols, callee sites, and `(file, caller, callee)` edges.
+- `impact` — transitive callers up to `impact_depth`, including edge lines.
 - `dependents` — files whose import statements resolve to the target file.
+- `references` — every non-declaration identifier occurrence, not just calls.
+- `implementations` — direct/transitive `extends`/`implements` subtypes.
+- `overrides` — methods in subtypes with the same name as the target method.
+- `no_callers` — negative controls whose gold set is empty.
 
 The source index masks comments/strings, matches declarations with regex,
-finds brace/indent ranges, parses imports, and resolves Java imports by fully
-qualified name. It supports Java, Python, JavaScript/TypeScript, and basic Go.
-This is deterministic and cross-platform, but it is **heuristic**, not a
-compiler or language server. Reports label these tasks accordingly.
+finds brace/indent ranges, parses imports and type headers, and resolves Java
+imports by fully qualified name. It supports Java, Python,
+JavaScript/TypeScript, and basic Go. This is deterministic and cross-platform,
+but it is **heuristic**, not a compiler or language server. Reports label these
+tasks accordingly.
 
-Targets are excluded when their name is ambiguous (overloads, same method in
-multiple classes), when they are generic names (`main`, `get`, `toString`, ...),
-or when the gold set is empty/too large. That keeps the measurement meaningful.
+For tasks other than `symbol_definitions`, targets are excluded when their name
+is ambiguous, when they are generic names (`main`, `get`, `toString`, ...), or
+when the gold set is empty/too large. `symbol_definitions` exists specifically
+to exercise that disambiguation path.
 
 ## What a run does
 
@@ -382,6 +408,13 @@ Query policy is explicit and recorded in `run.json`:
 - `--query-mode title`: title only.
 - Structural tasks always use their `query_template`.
 - `--top-k` is passed as each tool's limit (via `{k}`).
+- `--repeat N` runs each query N times and reports median plus p95.
+- `--split train|test` restricts the run to the deterministic held-out split
+  stored in `instance.meta.split`.
+- Repository `include`/`exclude` globs are enforced on returned paths by
+  default. `--no-scope-filter` keeps out-of-scope results; the report shows how
+  many were removed per tool (`OOS`).
+- `--impact-depth` overrides the configured transitive depth.
 
 ## Metrics
 
@@ -394,8 +427,15 @@ Query policy is explicit and recorded in `run.json`:
 | `precision@k` | found gold files / returned unique files |
 | `mrr@10` | 1 / rank of the first gold match |
 | `hunk@5` | a returned line range overlaps a gold hunk within top 5 (localization) |
+| `site_recall@k` | fraction of gold declaration/reference sites returned |
+| `site_precision@k` | fraction of returned items that match a gold site |
+| `all_sites@k` | every gold site returned (`symbol_definitions`) |
+| `edge_recall@k` / `edge_precision@k` / `edge_f1@k` | call/reference edges, keyed by `(file, caller, callee)` |
+| `abstain@k` / `clean@k` | negative control returned no files |
+| `false_positives@k` | files returned for a no-callers instance |
 | `Files` / `Lines` | median unique files and returned line count (context cost) |
-| `Prep s` / `Query s` | median wall-clock seconds |
+| `Prep s` / `Query s` / `Q p95` | median prepare/query seconds and query p95 |
+| `Invalid` / `OOS` | paths absent from the worktree / removed by scope filtering |
 | `Errors` | failed (instance, tool) pairs |
 
 `summary.md` also includes per-repository tables, per-instance matrices,
@@ -405,8 +445,11 @@ instances that every successful tool missed.
 ## Repeatability
 
 - `manifest.json` is the benchmark; keep it with the run.
-- `run.json` records tool versions, repository HEADs, query policy, manifest
-  SHA-256, and the full tool config.
+- Instances carry a deterministic `meta.split` (`train`/`test`, 20% held out by
+  default). Use `--split test` for a held-out evaluation; `--holdout-fraction`
+  and `--split-seed` control the assignment at mining time.
+- `run.json` records tool versions, repository HEADs, query policy, repeat
+  count, split, scope-filter state, manifest SHA-256, and the full tool config.
 - Re-running into an existing `--run-id` is refused; use `--resume` to continue
   or `--fresh` to replace.
 - Indices are rebuilt per instance/tool; nothing is reused between runs.
@@ -449,8 +492,21 @@ are required.
   fixes touching only tests/resources/build files are not instances.
 - Structural gold is regex-derived, not compiler-grade. Generic method names,
   dynamic dispatch, reflection, and cross-language calls are invisible.
+  `symbol_definitions`, `implementations`, and `overrides` mitigate this by
+  testing ambiguous names and type hierarchies, but the oracle is still
+  heuristic.
+- `references` is an identifier-occurrence index, not a compiler-grade
+  symbol/reference resolver; shadowed names and overloaded names can widen gold.
 - `dependents` uses import statements only; same-package usage without imports
   is not counted.
+- Negative controls (`no_callers`) make abstention and false positives visible;
+  they do not replace a larger absence suite.
+- The shipped manifest has only Java repositories. The index supports Python,
+  JavaScript/TypeScript, and Go, but cross-language coverage requires adding
+  local repositories and re-mining.
+- Every run builds a fresh worktree and full index. Incremental indexing,
+  post-edit `sync`, stale-cache behavior, and rename/delete handling are not yet
+  measured.
 - Codebase-memory's filtered index modes (`fast`, `moderate`) skip
   `**/samples/**`. On `spring-petclinic-microservices`, that is the entire Java
   package (`org.springframework.samples...`). The shipped adapter indexes with
@@ -468,6 +524,7 @@ are required.
 python3 -m unittest discover -s tests -v
 ```
 
-The suite covers masking, symbol/call/import indexing, JSON/cbm parsers,
-scoring, config add/remove, and an end-to-end offline mine → run → report
-pipeline against a temporary git repository.
+The suite covers masking, symbol/call/import/reference/hierarchy indexing,
+JSON/cbm/CodeGraph parsers, file/site/edge/absence scoring, config add/remove,
+and an end-to-end offline mine → run → report pipeline against a temporary git
+repository.

@@ -4,7 +4,8 @@
     "top_k": 10,
     "timeout": 300,
     "prepare_timeout": 900,
-    "cleanup_timeout": 60
+    "cleanup_timeout": 60,
+    "scope_filter": true
   },
   "plugins": [],
   "tools": {
@@ -48,9 +49,9 @@
           "{k}",
           "-j"
         ],
-        "callers": [
+        "symbol_definitions": [
           "codegraph",
-          "callers",
+          "query",
           "{symbol}",
           "-p",
           "{repo}",
@@ -58,9 +59,9 @@
           "{k}",
           "-j"
         ],
-        "callees": [
+        "references": [
           "codegraph",
-          "callees",
+          "query",
           "{symbol}",
           "-p",
           "{repo}",
@@ -68,16 +69,78 @@
           "{k}",
           "-j"
         ],
-        "impact": [
+        "implementations": [
           "codegraph",
-          "impact",
+          "query",
           "{symbol}",
           "-p",
           "{repo}",
-          "-d",
-          "{depth}",
+          "-l",
+          "{k}",
           "-j"
         ],
+        "overrides": [
+          "codegraph",
+          "query",
+          "{symbol}",
+          "-p",
+          "{repo}",
+          "-l",
+          "{k}",
+          "-j"
+        ],
+        "callers": {
+          "argv": [
+            "codegraph",
+            "callers",
+            "{symbol}",
+            "-p",
+            "{repo}",
+            "-l",
+            "{k}",
+            "-j"
+          ],
+          "parse": "codegraph_callers"
+        },
+        "no_callers": {
+          "argv": [
+            "codegraph",
+            "callers",
+            "{symbol}",
+            "-p",
+            "{repo}",
+            "-l",
+            "{k}",
+            "-j"
+          ],
+          "parse": "codegraph_callers"
+        },
+        "callees": {
+          "argv": [
+            "codegraph",
+            "callees",
+            "{symbol}",
+            "-p",
+            "{repo}",
+            "-l",
+            "{k}",
+            "-j"
+          ],
+          "parse": "codegraph_callees"
+        },
+        "impact": {
+          "argv": [
+            "codegraph",
+            "impact",
+            "{symbol}",
+            "-p",
+            "{repo}",
+            "-d",
+            "{depth}",
+            "-j"
+          ],
+          "parse": "codegraph_affected"
+        },
         "dependents": {
           "argv": [
             "codegraph",
@@ -183,6 +246,87 @@
           ],
           "parse": "cbm"
         },
+        "symbol_definitions": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "search_graph",
+            "--project",
+            "{repo}",
+            "--name-pattern",
+            "^{symbol}$",
+            "--limit",
+            "{k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm"
+        },
+        "references": {
+          "runner": "cbm_references",
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "query_graph",
+            "--project",
+            "{repo}",
+            "--query",
+            "MATCH (a)-[:CALLS|USAGE|CALL_REFERENCE|MENTIONS]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm_query",
+          "fallback_argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "search_code",
+            "--project",
+            "{repo}",
+            "--pattern",
+            "{symbol}",
+            "--regex",
+            "true",
+            "--mode",
+            "compact",
+            "--limit",
+            "20",
+            "--source-max-lines",
+            "0",
+            "--file-pattern",
+            "{file_pattern}",
+            "--format",
+            "json"
+          ],
+          "fallback_parse": "cbm"
+        },
+        "implementations": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "query_graph",
+            "--project",
+            "{repo}",
+            "--query",
+            "MATCH (a)-[:INHERITS|IMPLEMENTS]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm_query"
+        },
+        "overrides": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "query_graph",
+            "--project",
+            "{repo}",
+            "--query",
+            "MATCH (a)-[:OVERRIDE]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm_query"
+        },
         "callers": {
           "argv": [
             "codebase-memory-mcp",
@@ -191,7 +335,21 @@
             "--project",
             "{repo}",
             "--query",
-            "MATCH (a)-[:CALLS]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, b.name LIMIT {k}",
+            "MATCH (a)-[:CALLS]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm_query"
+        },
+        "no_callers": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "query_graph",
+            "--project",
+            "{repo}",
+            "--query",
+            "MATCH (a)-[:CALLS]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
             "--format",
             "json"
           ],
@@ -205,7 +363,7 @@
             "--project",
             "{repo}",
             "--query",
-            "MATCH (a {name:\"{symbol}\"})-[:CALLS]->(b) RETURN b.name, b.file_path, a.name LIMIT {k}",
+            "MATCH (a {name:\"{symbol}\"})-[:CALLS]->(b) RETURN b.name, b.file_path, b.start_line, a.name LIMIT {k}",
             "--format",
             "json"
           ],
@@ -219,7 +377,7 @@
             "--project",
             "{repo}",
             "--query",
-            "MATCH (a)-[:CALLS*1..{depth}]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, b.name LIMIT {k}",
+            "MATCH (a)-[:CALLS*1..{depth}]->(b {name:\"{symbol}\"}) RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
             "--format",
             "json"
           ],
@@ -247,7 +405,16 @@
         "symbol_definition": {
           "runner": "rg_symbol"
         },
+        "symbol_definitions": {
+          "runner": "rg_symbol"
+        },
+        "references": {
+          "runner": "rg_references"
+        },
         "callers": {
+          "runner": "rg_callers"
+        },
+        "no_callers": {
           "runner": "rg_callers"
         }
       }

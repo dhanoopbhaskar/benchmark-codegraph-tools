@@ -57,6 +57,8 @@ DEFAULT_TASKS = {
             "reformat|typo|lint)\\b"
         ),
         "symbols_per_commit": 1,
+        "holdout_fraction": 0.2,
+        "split_seed": 0,
     },
     "tasks": {
         "localization": {
@@ -85,10 +87,34 @@ DEFAULT_TASKS = {
             "scorer": "site",
             "query_source": "structural",
             "query_template": "Where is `{symbol}` defined?",
-            "metrics": ["hit@1", "hit@3", "hit@5", "mrr@10"],
+            "metrics": [
+                "hit@1", "hit@3", "hit@5", "mrr@10",
+                "site_recall@10", "site_precision@10",
+            ],
             "symbols_per_commit": 1,
             "min_gold_files": 1,
             "max_gold_files": 5,
+        },
+        "symbol_definitions": {
+            "enabled": True,
+            "description": (
+                "Given a name with multiple declarations, list every definition. "
+                "This exercises symbol identity and completeness instead of "
+                "filtering ambiguous names out of the benchmark."
+            ),
+            "miner": "structural",
+            "scorer": "sites",
+            "query_source": "structural",
+            "query_template": "List every definition of `{symbol}`.",
+            "metrics": [
+                "hit@1", "hit@3", "hit@5", "hit@10", "mrr@10",
+                "site_recall@10", "site_precision@10", "all_sites@10",
+            ],
+            "symbols_per_commit": 1,
+            "min_gold_files": 2,
+            "max_gold_files": 20,
+            "allow_ambiguous": True,
+            "scan_all_symbols": True,
         },
         "callers": {
             "enabled": True,
@@ -103,6 +129,8 @@ DEFAULT_TASKS = {
             "metrics": [
                 "recall@5", "recall@10", "all@10", "hit@10",
                 "precision@10", "mrr@10",
+                "site_recall@10", "site_precision@10",
+                "edge_recall@10", "edge_precision@10", "edge_f1@10",
             ],
             "symbols_per_commit": 1,
             "min_gold_files": 1,
@@ -121,6 +149,8 @@ DEFAULT_TASKS = {
             "metrics": [
                 "recall@5", "recall@10", "all@10", "hit@10",
                 "precision@10", "mrr@10",
+                "site_recall@10", "site_precision@10",
+                "edge_recall@10", "edge_precision@10", "edge_f1@10",
             ],
             "symbols_per_commit": 1,
             "min_gold_files": 1,
@@ -136,7 +166,10 @@ DEFAULT_TASKS = {
             "scorer": "set",
             "query_source": "structural",
             "query_template": "What code is affected if `{symbol}` changes?",
-            "metrics": ["recall@5", "recall@10", "all@10", "hit@10", "mrr@10"],
+            "metrics": [
+                "recall@5", "recall@10", "all@10", "hit@10", "mrr@10",
+                "site_recall@10", "site_precision@10",
+            ],
             "symbols_per_commit": 1,
             "impact_depth": 2,
             "min_gold_files": 1,
@@ -160,6 +193,90 @@ DEFAULT_TASKS = {
             "min_gold_files": 1,
             "max_gold_files": 40,
         },
+        "references": {
+            "enabled": True,
+            "description": (
+                "Given a symbol, return every non-declaration reference to it: "
+                "calls, field/type uses, annotations, and other identifier "
+                "occurrences. This is broader than callers."
+            ),
+            "miner": "structural",
+            "scorer": "set",
+            "query_source": "structural",
+            "query_template": "Find every reference to `{symbol}`.",
+            "metrics": [
+                "recall@5", "recall@10", "all@10", "hit@10",
+                "precision@10", "mrr@10",
+                "site_recall@10", "site_precision@10",
+                "edge_recall@10", "edge_precision@10", "edge_f1@10",
+            ],
+            "symbols_per_commit": 1,
+            "min_gold_files": 1,
+            "max_gold_files": 40,
+        },
+        "implementations": {
+            "enabled": True,
+            "description": (
+                "Given a type, return every type that extends or implements it "
+                "(direct and transitive), derived from class headers."
+            ),
+            "miner": "structural",
+            "scorer": "set",
+            "query_source": "structural",
+            "query_template": "Find all types that extend or implement `{symbol}`.",
+            "metrics": [
+                "recall@5", "recall@10", "all@10", "hit@10",
+                "precision@10", "mrr@10",
+                "site_recall@10", "site_precision@10",
+                "edge_recall@10", "edge_precision@10", "edge_f1@10",
+            ],
+            "symbols_per_commit": 1,
+            "min_gold_files": 1,
+            "max_gold_files": 40,
+            "scan_all_symbols": True,
+            "allow_ambiguous": True,
+        },
+        "overrides": {
+            "enabled": True,
+            "description": (
+                "Given a method, return methods in subtypes that override it. "
+                "This exercises type hierarchy plus method identity."
+            ),
+            "miner": "structural",
+            "scorer": "set",
+            "query_source": "structural",
+            "query_template": "Find all methods that override `{symbol}`.",
+            "metrics": [
+                "recall@5", "recall@10", "all@10", "hit@10",
+                "precision@10", "mrr@10",
+                "site_recall@10", "site_precision@10",
+                "edge_recall@10", "edge_precision@10", "edge_f1@10",
+            ],
+            "symbols_per_commit": 1,
+            "min_gold_files": 1,
+            "max_gold_files": 40,
+            "scan_all_symbols": True,
+            "allow_ambiguous": True,
+        },
+        "no_callers": {
+            "enabled": True,
+            "description": (
+                "Negative control: the symbol has no callers. A successful tool "
+                "must abstain instead of returning plausible files."
+            ),
+            "miner": "structural",
+            "scorer": "absence",
+            "query_source": "structural",
+            "query_template": "Find all callers of `{symbol}`.",
+            "metrics": [
+                "abstain@10", "clean@10", "false_positives@10",
+            ],
+            "symbols_per_commit": 1,
+            "min_gold_files": 0,
+            "max_gold_files": 0,
+            "allow_empty_gold": True,
+            "scan_all_symbols": True,
+        },
     },
 }
 
@@ -170,6 +287,7 @@ DEFAULT_TOOLS = {
         "timeout": 300,
         "prepare_timeout": 900,
         "cleanup_timeout": 60,
+        "scope_filter": True,
     },
     "plugins": [],
     "tools": {
@@ -194,24 +312,56 @@ DEFAULT_TOOLS = {
                     "codegraph", "query", "{symbol}", "-p", "{repo}",
                     "-l", "{k}", "-j",
                 ],
-                "callers": [
-                    "codegraph", "callers", "{symbol}", "-p", "{repo}",
+                "symbol_definitions": [
+                    "codegraph", "query", "{symbol}", "-p", "{repo}",
                     "-l", "{k}", "-j",
                 ],
-                "callees": [
-                    "codegraph", "callees", "{symbol}", "-p", "{repo}",
+                "references": [
+                    "codegraph", "query", "{symbol}", "-p", "{repo}",
                     "-l", "{k}", "-j",
                 ],
-                "impact": [
-                    "codegraph", "impact", "{symbol}", "-p", "{repo}",
-                    "-d", "{depth}", "-j",
+                "implementations": [
+                    "codegraph", "query", "{symbol}", "-p", "{repo}",
+                    "-l", "{k}", "-j",
                 ],
+                "overrides": [
+                    "codegraph", "query", "{symbol}", "-p", "{repo}",
+                    "-l", "{k}", "-j",
+                ],
+                "callers": {
+                    "argv": [
+                        "codegraph", "callers", "{symbol}", "-p", "{repo}",
+                        "-l", "{k}", "-j",
+                    ],
+                    "parse": "codegraph_callers",
+                },
+                "no_callers": {
+                    "argv": [
+                        "codegraph", "callers", "{symbol}", "-p", "{repo}",
+                        "-l", "{k}", "-j",
+                    ],
+                    "parse": "codegraph_callers",
+                },
+                "callees": {
+                    "argv": [
+                        "codegraph", "callees", "{symbol}", "-p", "{repo}",
+                        "-l", "{k}", "-j",
+                    ],
+                    "parse": "codegraph_callees",
+                },
+                "impact": {
+                    "argv": [
+                        "codegraph", "impact", "{symbol}", "-p", "{repo}",
+                        "-d", "{depth}", "-j",
+                    ],
+                    "parse": "codegraph_affected",
+                },
                 "dependents": {
                     "argv": [
                         "codegraph", "node", "-f", "{path}", "--symbols-only",
                         "-p", "{repo}",
                     ],
-                    "parse": "lines",
+                    "parse": "codegraph_dependents",
                 },
             },
         },
@@ -269,12 +419,74 @@ DEFAULT_TOOLS = {
                     ],
                     "parse": "cbm",
                 },
+                "symbol_definitions": {
+                    "argv": [
+                        "codebase-memory-mcp", "cli", "search_graph",
+                        "--project", "{repo}", "--name-pattern", "^{symbol}$",
+                        "--limit", "{k}", "--format", "json",
+                    ],
+                    "parse": "cbm",
+                },
+                "references": {
+                    "runner": "cbm_references",
+                    "argv": [
+                        "codebase-memory-mcp", "cli", "query_graph",
+                        "--project", "{repo}", "--query",
+                        'MATCH (a)-[:CALLS|USAGE|CALL_REFERENCE|MENTIONS]'
+                        '->(b {name:"{symbol}"}) '
+                        "RETURN a.name, a.file_path, a.start_line, b.name "
+                        "LIMIT {k}",
+                        "--format", "json",
+                    ],
+                    "parse": "cbm_query",
+                    "fallback_argv": [
+                        "codebase-memory-mcp", "cli", "search_code",
+                        "--project", "{repo}", "--pattern", "{symbol}",
+                        "--regex", "true", "--mode", "compact",
+                        "--limit", "20", "--source-max-lines", "0",
+                        "--file-pattern", "{file_pattern}",
+                        "--format", "json",
+                    ],
+                    "fallback_parse": "cbm",
+                },
+                "implementations": {
+                    "argv": [
+                        "codebase-memory-mcp", "cli", "query_graph",
+                        "--project", "{repo}", "--query",
+                        'MATCH (a)-[:INHERITS|IMPLEMENTS]->(b {name:"{symbol}"}) '
+                        "RETURN a.name, a.file_path, a.start_line, b.name "
+                        "LIMIT {k}",
+                        "--format", "json",
+                    ],
+                    "parse": "cbm_query",
+                },
+                "overrides": {
+                    "argv": [
+                        "codebase-memory-mcp", "cli", "query_graph",
+                        "--project", "{repo}", "--query",
+                        'MATCH (a)-[:OVERRIDE]->(b {name:"{symbol}"}) '
+                        "RETURN a.name, a.file_path, a.start_line, b.name "
+                        "LIMIT {k}",
+                        "--format", "json",
+                    ],
+                    "parse": "cbm_query",
+                },
                 "callers": {
                     "argv": [
                         "codebase-memory-mcp", "cli", "query_graph",
                         "--project", "{repo}", "--query",
                         'MATCH (a)-[:CALLS]->(b {name:"{symbol}"}) '
-                        "RETURN a.name, a.file_path, b.name LIMIT {k}",
+                        "RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
+                        "--format", "json",
+                    ],
+                    "parse": "cbm_query",
+                },
+                "no_callers": {
+                    "argv": [
+                        "codebase-memory-mcp", "cli", "query_graph",
+                        "--project", "{repo}", "--query",
+                        'MATCH (a)-[:CALLS]->(b {name:"{symbol}"}) '
+                        "RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
                         "--format", "json",
                     ],
                     "parse": "cbm_query",
@@ -284,7 +496,7 @@ DEFAULT_TOOLS = {
                         "codebase-memory-mcp", "cli", "query_graph",
                         "--project", "{repo}", "--query",
                         'MATCH (a {name:"{symbol}"})-[:CALLS]->(b) '
-                        "RETURN b.name, b.file_path, a.name LIMIT {k}",
+                        "RETURN b.name, b.file_path, b.start_line, a.name LIMIT {k}",
                         "--format", "json",
                     ],
                     "parse": "cbm_query",
@@ -294,7 +506,7 @@ DEFAULT_TOOLS = {
                         "codebase-memory-mcp", "cli", "query_graph",
                         "--project", "{repo}", "--query",
                         'MATCH (a)-[:CALLS*1..{depth}]->(b {name:"{symbol}"}) '
-                        "RETURN a.name, a.file_path, b.name LIMIT {k}",
+                        "RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
                         "--format", "json",
                     ],
                     "parse": "cbm_query",
@@ -317,7 +529,10 @@ DEFAULT_TOOLS = {
             "queries": {
                 "localization": {"runner": "rg_localization"},
                 "symbol_definition": {"runner": "rg_symbol"},
+                "symbol_definitions": {"runner": "rg_symbol"},
+                "references": {"runner": "rg_references"},
                 "callers": {"runner": "rg_callers"},
+                "no_callers": {"runner": "rg_callers"},
             },
         },
         "semble": {

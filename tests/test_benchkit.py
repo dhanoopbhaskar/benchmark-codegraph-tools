@@ -17,18 +17,25 @@ from benchkit.adapters import query_for_task  # noqa: E402
 from benchkit.config import BenchHome, load_json, save_json  # noqa: E402
 from benchkit.config_cmds import cmd_repos, cmd_tools  # noqa: E402
 from benchkit.languages import RepoIndex, mask_code  # noqa: E402
+from benchkit.mining import assign_splits  # noqa: E402
+from benchkit.text import path_in_scope  # noqa: E402
 from benchkit.parsers import (  # noqa: E402
     parse_cbm,
     parse_cbm_query,
     parse_cbm_semantic,
+    parse_codegraph_affected,
+    parse_codegraph_callees,
+    parse_codegraph_callers,
     parse_codegraph_dependents,
     parse_recursive_json,
 )
 from benchkit.scoring import (  # noqa: E402
     aggregate_rows,
+    score_absence,
     score_localization,
     score_set,
     score_site,
+    score_sites,
 )
 
 
@@ -95,6 +102,28 @@ class IndexTests(unittest.TestCase):
             "public class User { PetRequest request; }\n",
             encoding="utf-8",
         )
+        (self.root / "src/main/java/com/example/Base.java").write_text(
+            "package com.example;\n"
+            "public interface Base {\n"
+            "    void handle();\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        (self.root / "src/main/java/com/example/Impl.java").write_text(
+            "package com.example;\n"
+            "public class Impl implements Base {\n"
+            "    public void handle() { implHelper(1); }\n"
+            "    public void implHelper(int x) {}\n"
+            "}\n",
+            encoding="utf-8",
+        )
+        (self.root / "src/main/java/com/example/UseImpl.java").write_text(
+            "package com.example;\n"
+            "public class UseImpl {\n"
+            "    public void go() { new Impl().handle(); }\n"
+            "}\n",
+            encoding="utf-8",
+        )
         self.cfg = {
             "include": ["**/*.java"],
             "exclude": ["**/src/test/**"],
@@ -125,6 +154,51 @@ class IndexTests(unittest.TestCase):
             self.index.importers_of(path),
             ["src/main/java/com/example/User.java"],
         )
+
+    def test_references_include_non_call_sites(self):
+        target = self.index.unique_symbol("target")
+        references = self.index.references(target)
+        self.assertTrue(any(path.endswith("Bar.java") for _o, _l, path in references))
+
+    def test_type_hierarchy_and_overrides(self):
+        base = next(
+            symbol for symbol in self.index.symbols_named("handle")
+            if symbol.path.endswith("Base.java")
+        )
+        self.assertEqual(
+            [item.name for item in self.index.implementations("Base")],
+            ["Impl"],
+        )
+        overrides = self.index.overrides(base)
+        self.assertEqual([item.name for item in overrides], ["handle"])
+        self.assertTrue(overrides[0].path.endswith("Impl.java"))
+
+
+
+
+class MultiLanguageIndexTests(unittest.TestCase):
+    def test_python_inheritance_and_references(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "base.py").write_text(
+                "class Base:\n"
+                "    def handle(self):\n"
+                "        pass\n",
+                encoding="utf-8",
+            )
+            (root / "impl.py").write_text(
+                "from base import Base\n"
+                "class Impl(Base):\n"
+                "    def handle(self):\n"
+                "        self.helper()\n"
+                "    def helper(self):\n"
+                "        pass\n",
+                encoding="utf-8",
+            )
+            index = RepoIndex(root, {"include": ["**/*.py"]})
+            self.assertEqual([s.name for s in index.implementations("Base")], ["Impl"])
+            base = next(s for s in index.symbols_named("handle") if s.path == "base.py")
+            self.assertEqual([s.path for s in index.overrides(base)], ["impl.py"])
 
 
 class ParserTests(unittest.TestCase):
@@ -175,6 +249,39 @@ class ParserTests(unittest.TestCase):
         self.assertEqual(items[0]["path"], "src/Foo.java")
         self.assertEqual(items[0]["symbol"], "Pkg.Foo")
         self.assertEqual(items[0]["score"], 0.42)
+
+    def test_codegraph_relation_parsers_exclude_target(self):
+        payload = json.dumps({
+            "symbol": "target",
+            "targets": [{"name": "target", "filePath": "src/A.java", "startLine": 10}],
+            "definitions": [{
+                "definition": {
+                    "name": "target", "filePath": "src/A.java", "startLine": 10,
+                },
+                "roots": ["method:target"],
+                "callers": [{
+                    "name": "caller", "filePath": "src/B.java", "startLine": 20,
+                }],
+                "callees": [{
+                    "name": "callee", "filePath": "src/C.java", "startLine": 30,
+                }],
+                "affected": [
+                    {"id": "method:target", "name": "target",
+                     "filePath": "src/A.java", "startLine": 10},
+                    {"id": "method:caller", "name": "caller",
+                     "filePath": "src/B.java", "startLine": 20},
+                ],
+            }],
+        })
+        callers = parse_codegraph_callers(payload, "/repo")
+        self.assertEqual([(i["path"], i["symbol"]) for i in callers],
+                         [("src/B.java", "caller")])
+        callees = parse_codegraph_callees(payload, "/repo")
+        self.assertEqual([(i["path"], i["symbol"]) for i in callees],
+                         [("src/C.java", "callee")])
+        affected = parse_codegraph_affected(payload, "/repo")
+        self.assertEqual([(i["path"], i["symbol"]) for i in affected],
+                         [("src/B.java", "caller")])
 
     def test_cbm_query_table(self):
         payload = json.dumps({
@@ -243,6 +350,24 @@ class ScoringTests(unittest.TestCase):
         self.assertAlmostEqual(stat["metrics"]["precision@10"], 50.0)
         self.assertEqual(stat["metrics"]["hit@10"], 100.0)
 
+    def test_aggregate_percentiles(self):
+        rows = [{
+            "error": None,
+            "prepare_s": 0.2,
+            "query_s": 0.3,
+            "query_s_samples": [0.1, 0.3, 0.5],
+            "metrics": {
+                "recall@5": 1.0,
+                "files_returned": 1,
+                "context_lines": 1,
+                "invalid_paths": 0,
+            },
+        }]
+        stat = aggregate_rows(rows, {"metrics": ["recall@5"]}, 10)
+        self.assertAlmostEqual(stat["query_s"], 0.3)
+        self.assertAlmostEqual(stat["query_s_p95"], 0.5)
+        self.assertEqual(stat["query_samples"], 3)
+
     def test_set_recall(self):
         instance = {"gold": {"files": ["src/A.java", "src/B.java"]}}
         items = [
@@ -253,6 +378,79 @@ class ScoringTests(unittest.TestCase):
         self.assertAlmostEqual(metrics["recall@5"], 0.5)
         self.assertFalse(metrics["all@10"])
         self.assertTrue(metrics["hit@5"])
+
+    def test_set_site_and_edge_metrics(self):
+        instance = {
+            "task": "callers",
+            "query": {"symbol": "target"},
+            "gold": {
+                "files": ["src/A.java", "src/B.java"],
+                "sites": [
+                    {"path": "src/A.java", "line": 10, "name": "callerA"},
+                    {"path": "src/B.java", "line": 20, "name": "callerB"},
+                ],
+                "edges": [
+                    {"path": "src/A.java", "from": "callerA", "to": "target"},
+                    {"path": "src/B.java", "from": "callerB", "to": "target"},
+                ],
+            },
+        }
+        items = [
+            {"path": "src/A.java", "line": 10, "end_line": 10, "symbol": "callerA"},
+            {"path": "src/B.java", "line": 20, "end_line": 20, "symbol": "wrong"},
+        ]
+        metrics = score_set(items, instance, 10, self.root)
+        self.assertAlmostEqual(metrics["site_recall@10"], 1.0)
+        self.assertAlmostEqual(metrics["site_precision@10"], 1.0)
+        self.assertAlmostEqual(metrics["edge_recall@10"], 0.5)
+        self.assertAlmostEqual(metrics["edge_precision@10"], 0.5)
+        self.assertAlmostEqual(metrics["edge_f1@10"], 0.5)
+
+    def test_absence(self):
+        instance = {"gold": {"files": []}}
+        clean = score_absence([], instance, 10, self.root)
+        noisy = score_absence([{"path": "src/A.java"}], instance, 10, self.root)
+        self.assertTrue(clean["abstain@10"])
+        self.assertFalse(noisy["abstain@10"])
+        self.assertEqual(noisy["false_positives@10"], 1)
+
+    def test_sites_scorer(self):
+        instance = {
+            "gold": {
+                "sites": [
+                    {"path": "src/A.java", "line": 10, "name": "Foo"},
+                    {"path": "src/B.java", "line": 20, "name": "Foo"},
+                ]
+            }
+        }
+        items = [
+            {"path": "src/A.java", "line": 10, "end_line": 10, "symbol": "Foo"},
+            {"path": "src/C.java", "line": 1, "end_line": 1, "symbol": "Foo"},
+        ]
+        metrics = score_sites(items, instance, 10, self.root)
+        self.assertAlmostEqual(metrics["site_recall@10"], 0.5)
+        self.assertFalse(metrics["all_sites@10"])
+
+
+class ScopeAndSplitTests(unittest.TestCase):
+    def test_scope_filter(self):
+        cfg = {"include": ["**/*.java"], "exclude": ["**/src/test/**"]}
+        self.assertTrue(path_in_scope("src/main/java/A.java", cfg))
+        self.assertFalse(path_in_scope("src/test/java/A.java", cfg))
+        self.assertFalse(path_in_scope("README.md", cfg))
+
+    def test_assign_splits_is_deterministic_and_preserves_existing(self):
+        instances = [
+            {"instance_id": "a", "meta": {}},
+            {"instance_id": "b", "meta": {"split": "test"}},
+        ]
+        first = assign_splits([dict(item, meta=dict(item["meta"])) for item in instances], 1.0, 0)
+        second = assign_splits([dict(item, meta=dict(item["meta"])) for item in instances], 1.0, 0)
+        self.assertEqual(
+            [item["meta"]["split"] for item in first],
+            [item["meta"]["split"] for item in second],
+        )
+        self.assertEqual(first[1]["meta"]["split"], "test")
 
 
 class ConfigCommandTests(unittest.TestCase):

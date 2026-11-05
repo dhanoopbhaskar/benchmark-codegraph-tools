@@ -64,12 +64,19 @@ def _write_task_section(lines, task_name, task_cfg, rows, tools_cfg, top_k, base
     if description:
         lines.append(description)
         lines.append("")
+    instance_count = len({row["instance_id"] for row in task_rows})
+    if instance_count >= 3:
+        note = ""
+    else:
+        note = " — **directional only (n < 3); no bootstrap interval**"
+    lines.append(f"Instances: **{instance_count}**{note}")
+    lines.append("")
     header = (
         "| Tool | Type | " + " | ".join(metrics)
-        + " | Files | Lines | Prep s | Query s | Errors |"
+        + " | Files | Lines | Prep s | Query s | Q p95 | Invalid | OOS | Errors |"
     )
     lines.append(header)
-    lines.append("|" + "---|" * (2 + len(metrics) + 5))
+    lines.append("|" + "---|" * (2 + len(metrics) + 8))
     for tool in tools:
         cfg = tools_cfg.get(tool, {})
         stat = stats[tool]
@@ -90,6 +97,9 @@ def _write_task_section(lines, task_name, task_cfg, rows, tools_cfg, top_k, base
             f"| {tool} | {cfg.get('kind', '')} | " + " | ".join(cells)
             + f" | {stat['files_returned']:.0f} | {stat['context_lines']:.0f}"
             + f" | {_fmt_time(stat['prepare_s'])} | {_fmt_time(stat['query_s'])}"
+            + f" | {_fmt_time(stat.get('query_s_p95'))}"
+            + f" | {stat.get('invalid_paths', 0)}"
+            + f" | {stat.get('out_of_scope', 0)}"
             + f" | {stat['errors']} |"
         )
     lines.append("")
@@ -97,7 +107,9 @@ def _write_task_section(lines, task_name, task_cfg, rows, tools_cfg, top_k, base
         primary = metrics[0]
         lines.append(
             f"Primary metric: **{primary}**; bracketed range is a seeded 95% "
-            "bootstrap interval over instances. `Files`/`Lines` are medians per query."
+            "bootstrap interval over instances. `Files`/`Lines` are medians per query. "
+            "`Invalid` counts returned paths that do not exist in the worktree; "
+            "`OOS` counts results removed by the repository scope filter."
         )
         lines.append("")
 
@@ -122,7 +134,9 @@ def _write_task_section(lines, task_name, task_cfg, rows, tools_cfg, top_k, base
 
     lines.append(f"### {task_name} — per instance")
     lines.append("")
-    if task_cfg.get("scorer") == "set":
+    if task_cfg.get("scorer") == "absence":
+        lines.append("Cell = `clean` (abstained) or `+N` returned files. `ERR` = tool failure.")
+    elif task_cfg.get("scorer") == "set":
         lines.append("Cell = gold files found / gold files total. `—` = none, `ERR` = tool failure.")
     else:
         lines.append("Cell = rank of the first matching gold file/site. `—` = not in top-k, `ERR` = tool failure.")
@@ -138,6 +152,12 @@ def _write_task_section(lines, task_name, task_cfg, rows, tools_cfg, top_k, base
                 cells.append("·")
             elif row.get("error"):
                 cells.append("ERR")
+            elif task_cfg.get("scorer") == "absence":
+                metrics_row = row.get("metrics") or {}
+                cells.append(
+                    "clean" if metrics_row.get("abstain@10") else
+                    f"+{metrics_row.get('false_positives@10', 0)}"
+                )
             elif task_cfg.get("scorer") == "set":
                 metrics_row = row.get("metrics") or {}
                 found = metrics_row.get("gold_found", 0)
@@ -148,6 +168,52 @@ def _write_task_section(lines, task_name, task_cfg, rows, tools_cfg, top_k, base
                 cells.append(str(rank) if rank else "—")
         lines.append(f"| {instance_id} | " + " | ".join(cells) + " |")
     lines.append("")
+
+    splits = sorted({
+        row.get("split") for row in task_rows if row.get("split")
+    })
+    if len(splits) > 1 and metrics:
+        lines.append(f"### {task_name} — per split")
+        lines.append("")
+        lines.append("| Tool | " + " | ".join(splits) + " |")
+        lines.append("|---|" + "---|" * len(splits))
+        for tool in tools:
+            cells = []
+            for split in splits:
+                subset = [
+                    row for row in task_rows
+                    if row["tool"] == tool and row.get("split") == split
+                ]
+                stat = aggregate_rows(subset, task_cfg, top_k)
+                value = stat["metrics"].get(primary) if metrics else None
+                cells.append(_fmt(primary, value) if metrics else str(stat["instances"]))
+            lines.append(f"| {tool} | " + " | ".join(cells) + " |")
+        lines.append("")
+
+    if task_name == "localization":
+        flagged = [row for row in task_rows if (row.get("flags") or {}).get("mentions_gold_path")]
+        unflagged = [row for row in task_rows if not (row.get("flags") or {}).get("mentions_gold_path")]
+        if flagged and unflagged and metrics:
+            lines.append(f"### {task_name} — query leakage")
+            lines.append("")
+            lines.append(
+                "`mentions_gold_path` means the issue text names a changed file; "
+                "those instances are easier."
+            )
+            lines.append("")
+            lines.append("| Tool | mentions path | no path mention |")
+            lines.append("|---|---:|---:|")
+            for tool in tools:
+                cells = []
+                for subset in (flagged, unflagged):
+                    stat = aggregate_rows(
+                        [row for row in subset if row["tool"] == tool],
+                        task_cfg, top_k,
+                    )
+                    value = stat["metrics"].get(primary) if metrics else None
+                    cells.append(_fmt(primary, value) if metrics else "n/a")
+                lines.append(f"| {tool} | " + " | ".join(cells) + " |")
+            lines.append("")
 
     if baseline and baseline in tools and len(tools) > 1:
         lines.append(f"### {task_name} — paired vs `{baseline}`")
@@ -207,6 +273,8 @@ def _write_task_section(lines, task_name, task_cfg, rows, tools_cfg, top_k, base
         by_instance.setdefault(row["instance_id"], []).append(row)
     missed = []
     for instance_id, group in by_instance.items():
+        if task_cfg.get("scorer") == "absence":
+            continue
         successful = [row for row in group if not row.get("error") and row.get("metrics")]
         if not successful:
             continue
@@ -281,6 +349,9 @@ def write_report(home: BenchHome, run_dir, baseline="rg", top_k=None):
         tools = sorted({row["tool"] for row in task_rows})
         task_summary = {
             "instances": len({row["instance_id"] for row in task_rows}),
+            "splits": sorted({
+                row.get("split") for row in task_rows if row.get("split")
+            }),
             "tools": {
                 tool: aggregate_rows(
                     [row for row in task_rows if row["tool"] == tool],
@@ -336,6 +407,9 @@ def _write_csv(run_dir, rows, tasks_cfg, top_k=10):
                         writer.writerow([task_name, repo or "*", tool, metric, value])
                     writer.writerow([task_name, repo or "*", tool, "instances", stat["instances"]])
                     writer.writerow([task_name, repo or "*", tool, "errors", stat["errors"]])
+                    writer.writerow([task_name, repo or "*", tool, "invalid_paths", stat.get("invalid_paths", 0)])
+                    writer.writerow([task_name, repo or "*", tool, "out_of_scope", stat.get("out_of_scope", 0)])
+                    writer.writerow([task_name, repo or "*", tool, "query_s_p95", stat.get("query_s_p95")])
 
     results_path = run_dir / "results.csv"
     metric_keys = sorted({

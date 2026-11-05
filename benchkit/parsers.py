@@ -316,6 +316,76 @@ def parse_lines(stdout: str, repo, cfg: dict | None = None) -> list[dict]:
     return _dedupe(items)
 
 
+def _parse_codegraph_relation(stdout: str, repo, key: str) -> list[dict]:
+    """Parse ``definitions[].callers/callees`` without the target definition.
+
+    CodeGraph callers/callees responses also contain the target under
+    ``targets`` and ``definitions[].definition``. A generic recursive parser
+    turns that definition into a result, which both inflates recall and makes
+    negative controls fail. Extract only the requested relation.
+    """
+    data = extract_json(stdout)
+    if not isinstance(data, dict):
+        return parse_recursive_json(stdout, repo)
+    items = []
+    for definition in data.get("definitions") or []:
+        if not isinstance(definition, dict):
+            continue
+        for row in definition.get(key) or []:
+            if not isinstance(row, dict):
+                continue
+            raw_path = row.get("filePath") or row.get("file_path") or row.get("path")
+            if not isinstance(raw_path, str):
+                continue
+            line = row.get("startLine") or row.get("start_line")
+            end_line = row.get("endLine") or row.get("end_line")
+            items.append({
+                "path": normalize_path(raw_path, repo),
+                "line": line,
+                "end_line": end_line if end_line is not None else line,
+                "score": None,
+                "symbol": row.get("name") or row.get("symbol"),
+            })
+    return _dedupe(items)
+
+
+def parse_codegraph_callers(stdout: str, repo, cfg: dict | None = None) -> list[dict]:
+    return _parse_codegraph_relation(stdout, repo, "callers")
+
+
+def parse_codegraph_callees(stdout: str, repo, cfg: dict | None = None) -> list[dict]:
+    return _parse_codegraph_relation(stdout, repo, "callees")
+
+
+def parse_codegraph_affected(stdout: str, repo, cfg: dict | None = None) -> list[dict]:
+    """Parse CodeGraph impact ``definitions[].affected``, excluding roots."""
+    data = extract_json(stdout)
+    if not isinstance(data, dict):
+        return parse_recursive_json(stdout, repo)
+    items = []
+    for definition in data.get("definitions") or []:
+        if not isinstance(definition, dict):
+            continue
+        roots = set(definition.get("roots") or [])
+        for row in definition.get("affected") or []:
+            if not isinstance(row, dict):
+                continue
+            if row.get("id") in roots:
+                continue
+            raw_path = row.get("filePath") or row.get("file_path") or row.get("path")
+            if not isinstance(raw_path, str):
+                continue
+            line = row.get("startLine") or row.get("start_line")
+            items.append({
+                "path": normalize_path(raw_path, repo),
+                "line": line,
+                "end_line": row.get("endLine") or row.get("end_line") or line,
+                "score": None,
+                "symbol": row.get("name") or row.get("symbol"),
+            })
+    return _dedupe(items)
+
+
 def parse_codegraph_dependents(stdout: str, repo, cfg: dict | None = None) -> list[dict]:
     """Parse ``codegraph node --symbols-only`` file mode.
 
@@ -375,6 +445,9 @@ PARSERS = {
     "cbm": parse_cbm,
     "cbm_query": parse_cbm_query,
     "cbm_semantic": parse_cbm_semantic,
+    "codegraph_callers": parse_codegraph_callers,
+    "codegraph_callees": parse_codegraph_callees,
+    "codegraph_affected": parse_codegraph_affected,
     "codegraph_dependents": parse_codegraph_dependents,
     "lines": parse_lines,
     "text_paths": parse_lines,

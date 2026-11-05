@@ -1,12 +1,210 @@
 {
   "version": 1,
-  "generated_at": "2026-11-05T11:30:39Z",
+  "generated_at": "2026-11-05T13:53:35Z",
   "workspace": "/Users/dhanoopbhaskar/git/test-code-search/benchmark",
   "ground_truth": {
     "localization": "files and hunks changed by the fix commit",
     "structural": "regex-derived symbol/call/import graph at base_commit"
   },
   "instances": [
+    {
+      "instance_id": "spring-petclinic-microservices-symbol_definitions-1e7ecb8b-timedaspect",
+      "task": "symbol_definitions",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "List every definition of `timedAspect`.",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/config/MetricConfig.java",
+          "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/config/MetricConfig.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/config/MetricConfig.java",
+            "line": 19,
+            "end_line": 21,
+            "name": "timedAspect",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/config/MetricConfig.java",
+            "line": 19,
+            "end_line": 21,
+            "name": "timedAspect",
+            "kind": "method"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "List every definition of `timedAspect`.",
+        "title": "List every definition of `timedAspect`.",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "timedAspect",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/config/MetricConfig.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/config/MetricConfig.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "timedAspect",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/config/MetricConfig.java",
+        "symbol_line": 19,
+        "symbol_end_line": 21,
+        "gold_count": 2,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "multiple_definitions",
+          "definitions": 2
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 2,
+        "gold_sites": 2,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-symbol_definitions-1e7ecb8b-map",
+      "task": "symbol_definitions",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "List every definition of `map`.",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/mapper/Mapper.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/mapper/OwnerEntityMapper.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/mapper/Mapper.java",
+            "line": 4,
+            "end_line": 4,
+            "name": "map",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/mapper/OwnerEntityMapper.java",
+            "line": 11,
+            "end_line": 18,
+            "name": "map",
+            "kind": "method"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "List every definition of `map`.",
+        "title": "List every definition of `map`.",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "map",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/mapper/Mapper.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/mapper/Mapper.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "map",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/mapper/Mapper.java",
+        "symbol_line": 4,
+        "symbol_end_line": 4,
+        "gold_count": 2,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "multiple_definitions",
+          "definitions": 2
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 2,
+        "gold_sites": 2,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-symbol_definitions-1e7ecb8b-getowner",
+      "task": "symbol_definitions",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "List every definition of `getOwner`.",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/CustomersServiceClient.java",
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Pet.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/CustomersServiceClient.java",
+            "line": 35,
+            "end_line": 40,
+            "name": "getOwner",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Pet.java",
+            "line": 85,
+            "end_line": 87,
+            "name": "getOwner",
+            "kind": "method"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "List every definition of `getOwner`.",
+        "title": "List every definition of `getOwner`.",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "getOwner",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/CustomersServiceClient.java",
+        "file": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/CustomersServiceClient.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "getOwner",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/CustomersServiceClient.java",
+        "symbol_line": 35,
+        "symbol_end_line": 40,
+        "gold_count": 2,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "multiple_definitions",
+          "definitions": 2
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 2,
+        "gold_sites": 2,
+        "problem_chars": 44
+      }
+    },
     {
       "instance_id": "spring-petclinic-microservices-symbol_definition-a3f9d06d-processcreationform",
       "task": "symbol_definition",
@@ -31,14 +229,17 @@
             "name": "processCreationForm",
             "kind": "method"
           }
-        ]
+        ],
+        "edges": []
       },
       "query": {
         "text": "Where is `processCreationForm` defined?",
         "title": "Where is `processCreationForm` defined?",
         "issue_text": "Add validation to reject future pet birth dates",
         "symbol": "processCreationForm",
+        "qualified_symbol": "PetResource.processCreationForm",
         "symbol_kind": "method",
+        "symbol_line": 57,
         "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
         "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
         "language": "java"
@@ -50,7 +251,9 @@
         "symbol_line": 57,
         "symbol_end_line": 67,
         "gold_count": 1,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "test"
       },
       "flags": {},
       "stats": {
@@ -83,14 +286,17 @@
             "name": "processUpdateForm",
             "kind": "method"
           }
-        ]
+        ],
+        "edges": []
       },
       "query": {
         "text": "Where is `processUpdateForm` defined?",
         "title": "Where is `processUpdateForm` defined?",
         "issue_text": "Pet birthdays cannot be set to a future date",
         "symbol": "processUpdateForm",
+        "qualified_symbol": "PetResource.processUpdateForm",
         "symbol_kind": "method",
+        "symbol_line": 70,
         "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
         "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
         "language": "java"
@@ -102,12 +308,428 @@
         "symbol_line": 70,
         "symbol_end_line": 74,
         "gold_count": 1,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
         "gold_files": 1,
         "gold_sites": 1,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-symbol_definition-1e7ecb8b-petresource",
+      "task": "symbol_definition",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Where is `PetResource` defined?",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 37,
+            "end_line": 100,
+            "name": "PetResource",
+            "kind": "class"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "Where is `PetResource` defined?",
+        "title": "Where is `PetResource` defined?",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "PetResource",
+        "qualified_symbol": "PetResource.PetResource",
+        "symbol_kind": "class",
+        "symbol_line": 37,
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "PetResource",
+        "symbol_kind": "class",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 37,
+        "symbol_end_line": 100,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-symbol_definition-aefaf7fa-loadvetdatatovectorstoreonstartup",
+      "task": "symbol_definition",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "295fa8d5ee10f7b6daddf83a2c65f9051a87564b",
+      "fix_commit": "aefaf7fa9eb0ab911a24c346ca0e4dc5837251c7",
+      "fix_date": "2026-09-23",
+      "issue_ref": "#564",
+      "title": "Where is `loadVetDataToVectorStoreOnStartup` defined?",
+      "problem_statement": "Fix GenAI vector store loading from JAR (#564)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+            "line": 50,
+            "end_line": 92,
+            "name": "loadVetDataToVectorStoreOnStartup",
+            "kind": "method"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "Where is `loadVetDataToVectorStoreOnStartup` defined?",
+        "title": "Where is `loadVetDataToVectorStoreOnStartup` defined?",
+        "issue_text": "Fix GenAI vector store loading from JAR (#564)",
+        "symbol": "loadVetDataToVectorStoreOnStartup",
+        "qualified_symbol": "VectorStoreController.loadVetDataToVectorStoreOnStartup",
+        "symbol_kind": "method",
+        "symbol_line": 50,
+        "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "file": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "loadVetDataToVectorStoreOnStartup",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "symbol_line": 50,
+        "symbol_end_line": 92,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 46
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-references-1e7ecb8b-petresource",
+      "task": "references",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Find every reference to `PetResource`.",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 39,
+            "end_line": 39,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 44,
+            "end_line": 44,
+            "name": "",
+            "kind": "reference"
+          }
+        ],
+        "edges": [
+          {
+            "from": "",
+            "to": "PetResource",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 39
+          },
+          {
+            "from": "",
+            "to": "PetResource",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 44
+          }
+        ]
+      },
+      "query": {
+        "text": "Find every reference to `PetResource`.",
+        "title": "Find every reference to `PetResource`.",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "PetResource",
+        "symbol_kind": "class",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "PetResource",
+        "symbol_kind": "class",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 37,
+        "symbol_end_line": 100,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-references-aefaf7fa-vectorstorecontroller",
+      "task": "references",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "295fa8d5ee10f7b6daddf83a2c65f9051a87564b",
+      "fix_commit": "aefaf7fa9eb0ab911a24c346ca0e4dc5837251c7",
+      "fix_date": "2026-09-23",
+      "issue_ref": "#564",
+      "title": "Find every reference to `VectorStoreController`.",
+      "problem_statement": "Fix GenAI vector store loading from JAR (#564)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+            "line": 39,
+            "end_line": 39,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+            "line": 44,
+            "end_line": 44,
+            "name": "",
+            "kind": "reference"
+          }
+        ],
+        "edges": [
+          {
+            "from": "",
+            "to": "VectorStoreController",
+            "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+            "line": 39
+          },
+          {
+            "from": "",
+            "to": "VectorStoreController",
+            "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+            "line": 44
+          }
+        ]
+      },
+      "query": {
+        "text": "Find every reference to `VectorStoreController`.",
+        "title": "Find every reference to `VectorStoreController`.",
+        "issue_text": "Fix GenAI vector store loading from JAR (#564)",
+        "symbol": "VectorStoreController",
+        "symbol_kind": "class",
+        "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "file": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "VectorStoreController",
+        "symbol_kind": "class",
+        "symbol_path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "symbol_line": 37,
+        "symbol_end_line": 112,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "test"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
+        "problem_chars": 46
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-no_callers-1e7ecb8b-sethostname",
+      "task": "no_callers",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Find all callers of `setHostname`.",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [],
+        "hunks": {},
+        "sites": [],
+        "edges": []
+      },
+      "query": {
+        "text": "Find all callers of `setHostname`.",
+        "title": "Find all callers of `setHostname`.",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "setHostname",
+        "qualified_symbol": "VisitsServiceClient.setHostname",
+        "symbol_kind": "method",
+        "symbol_line": 54,
+        "path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/VisitsServiceClient.java",
+        "file": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/VisitsServiceClient.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "setHostname",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/application/VisitsServiceClient.java",
+        "symbol_line": 54,
+        "symbol_end_line": 56,
+        "gold_count": 0,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "absence",
+          "callers": 0
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 0,
+        "gold_sites": 0,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-no_callers-1e7ecb8b-apetdetails",
+      "task": "no_callers",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Find all callers of `aPetDetails`.",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [],
+        "hunks": {},
+        "sites": [],
+        "edges": []
+      },
+      "query": {
+        "text": "Find all callers of `aPetDetails`.",
+        "title": "Find all callers of `aPetDetails`.",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "aPetDetails",
+        "qualified_symbol": "PetDetails.aPetDetails",
+        "symbol_kind": "method",
+        "symbol_line": 48,
+        "path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/PetDetails.java",
+        "file": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/PetDetails.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "aPetDetails",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/PetDetails.java",
+        "symbol_line": 48,
+        "symbol_end_line": 50,
+        "gold_count": 0,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "absence",
+          "callers": 0
+        },
+        "split": "test"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 0,
+        "gold_sites": 0,
+        "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-no_callers-1e7ecb8b-anownerdetails",
+      "task": "no_callers",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "dc9ca15a71189bc4be6c02518d7180232c0555b7",
+      "fix_commit": "1e7ecb8bcbd5c2215cddd5e54988929b7f26cd75",
+      "fix_date": "2026-10-07",
+      "issue_ref": null,
+      "title": "Find all callers of `anOwnerDetails`.",
+      "problem_statement": "Pet birthdays cannot be set to a future date",
+      "source_url": null,
+      "gold": {
+        "files": [],
+        "hunks": {},
+        "sites": [],
+        "edges": []
+      },
+      "query": {
+        "text": "Find all callers of `anOwnerDetails`.",
+        "title": "Find all callers of `anOwnerDetails`.",
+        "issue_text": "Pet birthdays cannot be set to a future date",
+        "symbol": "anOwnerDetails",
+        "qualified_symbol": "OwnerDetails.anOwnerDetails",
+        "symbol_kind": "method",
+        "symbol_line": 54,
+        "path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/OwnerDetails.java",
+        "file": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/OwnerDetails.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "anOwnerDetails",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/dto/OwnerDetails.java",
+        "symbol_line": 54,
+        "symbol_end_line": 56,
+        "gold_count": 0,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "absence",
+          "callers": 0
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 0,
+        "gold_sites": 0,
         "problem_chars": 44
       }
     },
@@ -144,7 +766,8 @@
       "meta": {
         "is_pr_text": true,
         "gold_count": 1,
-        "changed_lines": 3
+        "changed_lines": 3,
+        "split": "train"
       },
       "flags": {
         "mentions_gold_path": false
@@ -317,7 +940,8 @@
       "meta": {
         "is_pr_text": true,
         "gold_count": 5,
-        "changed_lines": 139
+        "changed_lines": 139,
+        "split": "train"
       },
       "flags": {
         "mentions_gold_path": false
@@ -391,6 +1015,44 @@
             "name": "getOwnerDetails",
             "kind": "method"
           }
+        ],
+        "edges": [
+          {
+            "from": "createOwner",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+            "line": 53
+          },
+          {
+            "from": "updateOwner",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+            "line": 88
+          },
+          {
+            "from": "processCreationForm",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 62
+          },
+          {
+            "from": "processUpdateForm",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 70
+          },
+          {
+            "from": "create",
+            "to": "save",
+            "path": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java",
+            "line": 61
+          },
+          {
+            "from": "getOwnerDetails",
+            "to": "create",
+            "path": "spring-petclinic-api-gateway/src/main/java/org/springframework/samples/petclinic/api/boundary/web/ApiGatewayController.java",
+            "line": 54
+          }
         ]
       },
       "query": {
@@ -410,12 +1072,89 @@
         "symbol_line": 73,
         "symbol_end_line": 83,
         "gold_count": 4,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
         "gold_files": 4,
         "gold_sites": 6,
+        "problem_chars": 138
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-impact-39f6670e-findpetbyid",
+      "task": "impact",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "81a1cc0c7ecdf7a750695bd8f9344ab443b4cbf3",
+      "fix_commit": "39f6670e009a66e4b730d4e777e25a8ff7951a59",
+      "fix_date": "2024-01-05",
+      "issue_ref": "#253",
+      "title": "What code is affected if `findPetById` changes?",
+      "problem_statement": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 67,
+            "end_line": 71,
+            "name": "processUpdateForm",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 86,
+            "end_line": 88,
+            "name": "findPet",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "processUpdateForm",
+            "to": "findPetById",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 69
+          },
+          {
+            "from": "findPet",
+            "to": "findPetById",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 87
+          }
+        ]
+      },
+      "query": {
+        "text": "What code is affected if `findPetById` changes?",
+        "title": "What code is affected if `findPetById` changes?",
+        "issue_text": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+        "symbol": "findPetById",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "findPetById",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 91,
+        "symbol_end_line": 97,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
         "problem_chars": 138
       }
     },
@@ -449,7 +1188,8 @@
       "meta": {
         "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
         "gold_count": 2,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "split": "train"
       },
       "flags": {},
       "stats": {
@@ -512,6 +1252,38 @@
             "name": "create",
             "kind": "method"
           }
+        ],
+        "edges": [
+          {
+            "from": "createOwner",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+            "line": 53
+          },
+          {
+            "from": "updateOwner",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/OwnerResource.java",
+            "line": 88
+          },
+          {
+            "from": "processCreationForm",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 62
+          },
+          {
+            "from": "processUpdateForm",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 70
+          },
+          {
+            "from": "create",
+            "to": "save",
+            "path": "spring-petclinic-visits-service/src/main/java/org/springframework/samples/petclinic/visits/web/VisitResource.java",
+            "line": 61
+          }
         ]
       },
       "query": {
@@ -531,12 +1303,89 @@
         "symbol_line": 73,
         "symbol_end_line": 83,
         "gold_count": 3,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
         "gold_files": 3,
         "gold_sites": 5,
+        "problem_chars": 138
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-callers-39f6670e-findpetbyid",
+      "task": "callers",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "81a1cc0c7ecdf7a750695bd8f9344ab443b4cbf3",
+      "fix_commit": "39f6670e009a66e4b730d4e777e25a8ff7951a59",
+      "fix_date": "2024-01-05",
+      "issue_ref": "#253",
+      "title": "Find all callers of `findPetById`.",
+      "problem_statement": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 67,
+            "end_line": 71,
+            "name": "processUpdateForm",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 86,
+            "end_line": 88,
+            "name": "findPet",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "processUpdateForm",
+            "to": "findPetById",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 69
+          },
+          {
+            "from": "findPet",
+            "to": "findPetById",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 87
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all callers of `findPetById`.",
+        "title": "Find all callers of `findPetById`.",
+        "issue_text": "Introducing record class to only customer-service to start with  (#253)\n\nIntroducing record to the petclinic customer-service microservice",
+        "symbol": "findPetById",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "file": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "findPetById",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+        "symbol_line": 91,
+        "symbol_end_line": 97,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
         "problem_chars": 138
       }
     },
@@ -561,11 +1410,11 @@
         "hunks": {},
         "sites": [
           {
-            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/ResourceNotFoundException.java",
-            "line": 7,
-            "end_line": 13,
-            "name": "ResourceNotFoundException",
-            "kind": "class"
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
+            "line": 82,
+            "end_line": 85,
+            "name": "addPet",
+            "kind": "method"
           },
           {
             "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Pet.java",
@@ -575,18 +1424,44 @@
             "kind": "class"
           },
           {
-            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
-            "line": 82,
-            "end_line": 85,
-            "name": "addPet",
-            "kind": "method"
-          },
-          {
             "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
             "line": 77,
             "end_line": 87,
             "name": "save",
             "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/ResourceNotFoundException.java",
+            "line": 7,
+            "end_line": 13,
+            "name": "ResourceNotFoundException",
+            "kind": "class"
+          }
+        ],
+        "edges": [
+          {
+            "from": "processCreationForm",
+            "to": "addPet",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Owner.java",
+            "line": 65
+          },
+          {
+            "from": "processCreationForm",
+            "to": "Pet",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/model/Pet.java",
+            "line": 64
+          },
+          {
+            "from": "processCreationForm",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 66
+          },
+          {
+            "from": "processCreationForm",
+            "to": "ResourceNotFoundException",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/ResourceNotFoundException.java",
+            "line": 62
           }
         ]
       },
@@ -607,7 +1482,9 @@
         "symbol_line": 57,
         "symbol_end_line": 67,
         "gold_count": 4,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
@@ -647,6 +1524,20 @@
             "name": "save",
             "kind": "method"
           }
+        ],
+        "edges": [
+          {
+            "from": "processUpdateForm",
+            "to": "findPetById",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 72
+          },
+          {
+            "from": "processUpdateForm",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 73
+          }
         ]
       },
       "query": {
@@ -666,13 +1557,378 @@
         "symbol_line": 70,
         "symbol_end_line": 74,
         "gold_count": 1,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
         "gold_files": 1,
         "gold_sites": 2,
         "problem_chars": 44
+      }
+    },
+    {
+      "instance_id": "spring-petclinic-microservices-callees-aefaf7fa-loadvetdatatovectorstoreonstartup",
+      "task": "callees",
+      "repo": "spring-petclinic-microservices",
+      "base_commit": "295fa8d5ee10f7b6daddf83a2c65f9051a87564b",
+      "fix_commit": "aefaf7fa9eb0ab911a24c346ca0e4dc5837251c7",
+      "fix_date": "2026-09-23",
+      "issue_ref": "#564",
+      "title": "Find all functions called by `loadVetDataToVectorStoreOnStartup`.",
+      "problem_statement": "Fix GenAI vector store loading from JAR (#564)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+          "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 76,
+            "end_line": 86,
+            "name": "save",
+            "kind": "method"
+          },
+          {
+            "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+            "line": 94,
+            "end_line": 110,
+            "name": "convertListToJsonResource",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "loadVetDataToVectorStoreOnStartup",
+            "to": "save",
+            "path": "spring-petclinic-customers-service/src/main/java/org/springframework/samples/petclinic/customers/web/PetResource.java",
+            "line": 87
+          },
+          {
+            "from": "loadVetDataToVectorStoreOnStartup",
+            "to": "convertListToJsonResource",
+            "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+            "line": 76
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all functions called by `loadVetDataToVectorStoreOnStartup`.",
+        "title": "Find all functions called by `loadVetDataToVectorStoreOnStartup`.",
+        "issue_text": "Fix GenAI vector store loading from JAR (#564)",
+        "symbol": "loadVetDataToVectorStoreOnStartup",
+        "symbol_kind": "method",
+        "path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "file": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "loadVetDataToVectorStoreOnStartup",
+        "symbol_kind": "method",
+        "symbol_path": "spring-petclinic-genai-service/src/main/java/org/springframework/samples/petclinic/genai/VectorStoreController.java",
+        "symbol_line": 50,
+        "symbol_end_line": 92,
+        "gold_count": 2,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 2,
+        "gold_sites": 2,
+        "problem_chars": 46
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-symbol_definitions-ea8e0f90-timeinmillis",
+      "task": "symbol_definitions",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "List every definition of `timeInMillis`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "common/src/main/java/org/broadleafcommerce/common/time/DefaultTimeSource.java",
+          "common/src/main/java/org/broadleafcommerce/common/time/FixedTimeSource.java",
+          "common/src/main/java/org/broadleafcommerce/common/time/TimeSource.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/time/DefaultTimeSource.java",
+            "line": 22,
+            "end_line": 24,
+            "name": "timeInMillis",
+            "kind": "method"
+          },
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/time/FixedTimeSource.java",
+            "line": 28,
+            "end_line": 30,
+            "name": "timeInMillis",
+            "kind": "method"
+          },
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/time/TimeSource.java",
+            "line": 32,
+            "end_line": 32,
+            "name": "timeInMillis",
+            "kind": "method"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "List every definition of `timeInMillis`.",
+        "title": "List every definition of `timeInMillis`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "timeInMillis",
+        "symbol_kind": "method",
+        "path": "common/src/main/java/org/broadleafcommerce/common/time/DefaultTimeSource.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/time/DefaultTimeSource.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "timeInMillis",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/time/DefaultTimeSource.java",
+        "symbol_line": 22,
+        "symbol_end_line": 24,
+        "gold_count": 3,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "multiple_definitions",
+          "definitions": 3
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 3,
+        "gold_sites": 3,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-symbol_definitions-ea8e0f90-isfeaturedproduct",
+      "task": "symbol_definitions",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "List every definition of `isFeaturedProduct`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "core/broadleaf-framework-web/src/main/java/org/broadleafcommerce/core/web/expression/RelatedProductsVariableExpression.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/dao/FeaturedProductDao.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/dao/FeaturedProductDaoImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/service/RelatedProductsService.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/service/RelatedProductsServiceImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-framework-web/src/main/java/org/broadleafcommerce/core/web/expression/RelatedProductsVariableExpression.java",
+            "line": 86,
+            "end_line": 88,
+            "name": "isFeaturedProduct",
+            "kind": "method"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/dao/FeaturedProductDao.java",
+            "line": 22,
+            "end_line": 22,
+            "name": "isFeaturedProduct",
+            "kind": "method"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/dao/FeaturedProductDaoImpl.java",
+            "line": 34,
+            "end_line": 43,
+            "name": "isFeaturedProduct",
+            "kind": "method"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/service/RelatedProductsService.java",
+            "line": 43,
+            "end_line": 43,
+            "name": "isFeaturedProduct",
+            "kind": "method"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/service/RelatedProductsServiceImpl.java",
+            "line": 74,
+            "end_line": 76,
+            "name": "isFeaturedProduct",
+            "kind": "method"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "List every definition of `isFeaturedProduct`.",
+        "title": "List every definition of `isFeaturedProduct`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "isFeaturedProduct",
+        "symbol_kind": "method",
+        "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/dao/FeaturedProductDao.java",
+        "file": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/dao/FeaturedProductDao.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "isFeaturedProduct",
+        "symbol_kind": "method",
+        "symbol_path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/dao/FeaturedProductDao.java",
+        "symbol_line": 22,
+        "symbol_end_line": 22,
+        "gold_count": 5,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "multiple_definitions",
+          "definitions": 5
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 5,
+        "gold_sites": 5,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-symbol_definitions-ea8e0f90-gettemplatecachekey",
+      "task": "symbol_definitions",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "List every definition of `getTemplateCacheKey`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionHandler.java",
+          "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionManager.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionHandler.java",
+            "line": 22,
+            "end_line": 22,
+            "name": "getTemplateCacheKey",
+            "kind": "method"
+          },
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionManager.java",
+            "line": 53,
+            "end_line": 59,
+            "name": "getTemplateCacheKey",
+            "kind": "method"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "List every definition of `getTemplateCacheKey`.",
+        "title": "List every definition of `getTemplateCacheKey`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "getTemplateCacheKey",
+        "symbol_kind": "method",
+        "path": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionHandler.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionHandler.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "getTemplateCacheKey",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionHandler.java",
+        "symbol_line": 22,
+        "symbol_end_line": 22,
+        "gold_count": 2,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "multiple_definitions",
+          "definitions": 2
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 2,
+        "gold_sites": 2,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-symbol_definition-ea8e0f90-customerimpl",
+      "task": "symbol_definition",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Where is `CustomerImpl` defined?",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+            "line": 100,
+            "end_line": 667,
+            "name": "CustomerImpl",
+            "kind": "class"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "Where is `CustomerImpl` defined?",
+        "title": "Where is `CustomerImpl` defined?",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "CustomerImpl",
+        "qualified_symbol": "CustomerImpl.CustomerImpl",
+        "symbol_kind": "class",
+        "symbol_line": 100,
+        "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+        "file": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "CustomerImpl",
+        "symbol_kind": "class",
+        "symbol_path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+        "symbol_line": 100,
+        "symbol_end_line": 667,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 154
       }
     },
     {
@@ -685,7 +1941,7 @@
       "issue_ref": "#5504",
       "title": "Where is `CustomerForgotPasswordSecurityTokenImpl` defined?",
       "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
-      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3152",
+      "source_url": null,
       "gold": {
         "files": [
           "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java"
@@ -699,14 +1955,17 @@
             "name": "CustomerForgotPasswordSecurityTokenImpl",
             "kind": "class"
           }
-        ]
+        ],
+        "edges": []
       },
       "query": {
         "text": "Where is `CustomerForgotPasswordSecurityTokenImpl` defined?",
         "title": "Where is `CustomerForgotPasswordSecurityTokenImpl` defined?",
         "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
         "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "qualified_symbol": "CustomerForgotPasswordSecurityTokenImpl.CustomerForgotPasswordSecurityTokenImpl",
         "symbol_kind": "class",
+        "symbol_line": 38,
         "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
         "file": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
         "language": "java"
@@ -718,7 +1977,9 @@
         "symbol_line": 38,
         "symbol_end_line": 123,
         "gold_count": 1,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
@@ -737,7 +1998,7 @@
       "issue_ref": "#5495",
       "title": "Where is `AdminAuditableListener` defined?",
       "problem_statement": "BroadleafCommerce/QA#5495 - Set admin audit creation data for entities with an embedded auditable (#3147)",
-      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3147",
+      "source_url": null,
       "gold": {
         "files": [
           "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java"
@@ -751,11 +2012,916 @@
             "name": "AdminAuditableListener",
             "kind": "class"
           }
-        ]
+        ],
+        "edges": []
       },
       "query": {
         "text": "Where is `AdminAuditableListener` defined?",
         "title": "Where is `AdminAuditableListener` defined?",
+        "issue_text": "BroadleafCommerce/QA#5495 - Set admin audit creation data for entities with an embedded auditable (#3147)",
+        "symbol": "AdminAuditableListener",
+        "qualified_symbol": "AdminAuditableListener.AdminAuditableListener",
+        "symbol_kind": "class",
+        "symbol_line": 31,
+        "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+        "file": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "AdminAuditableListener",
+        "symbol_kind": "class",
+        "symbol_path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+        "symbol_line": 31,
+        "symbol_end_line": 73,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "test"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 105
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-symbol_definition-d7bcd8c7-addactivedaterestrictions",
+      "task": "symbol_definition",
+      "repo": "BroadleafCommerce",
+      "base_commit": "b42a60945e0e564c51e852a637172f83ad48d365",
+      "fix_commit": "d7bcd8c747ae2a90e0455d535717d879323cba11",
+      "fix_date": "2026-05-04",
+      "issue_ref": "#3118",
+      "title": "Where is `addActiveDateRestrictions` defined?",
+      "problem_statement": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 142,
+            "end_line": 155,
+            "name": "addActiveDateRestrictions",
+            "kind": "method"
+          }
+        ],
+        "edges": []
+      },
+      "query": {
+        "text": "Where is `addActiveDateRestrictions` defined?",
+        "title": "Where is `addActiveDateRestrictions` defined?",
+        "issue_text": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+        "symbol": "addActiveDateRestrictions",
+        "qualified_symbol": "PageDaoImpl.addActiveDateRestrictions",
+        "symbol_kind": "method",
+        "symbol_line": 142,
+        "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "file": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "addActiveDateRestrictions",
+        "symbol_kind": "method",
+        "symbol_path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "symbol_line": 142,
+        "symbol_end_line": 155,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 100
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-references-ea8e0f90-customerimpl",
+      "task": "references",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find every reference to `CustomerImpl`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/domain/CustomerOfferImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/domain/OrderImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/RatingDetailImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewDetailImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewFeedbackImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/util/dao/ResourcePurgeDaoImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerAddressImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerAttributeImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerPaymentImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerPhoneImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerRoleImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/domain/CustomerOfferImpl.java",
+            "line": 22,
+            "end_line": 22,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/domain/CustomerOfferImpl.java",
+            "line": 66,
+            "end_line": 66,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/domain/OrderImpl.java",
+            "line": 65,
+            "end_line": 65,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/domain/OrderImpl.java",
+            "line": 151,
+            "end_line": 151,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/RatingDetailImpl.java",
+            "line": 24,
+            "end_line": 24,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/RatingDetailImpl.java",
+            "line": 53,
+            "end_line": 53,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewDetailImpl.java",
+            "line": 29,
+            "end_line": 29,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewDetailImpl.java",
+            "line": 66,
+            "end_line": 66,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewFeedbackImpl.java",
+            "line": 24,
+            "end_line": 24,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewFeedbackImpl.java",
+            "line": 67,
+            "end_line": 67,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/util/dao/ResourcePurgeDaoImpl.java",
+            "line": 24,
+            "end_line": 24,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/util/dao/ResourcePurgeDaoImpl.java",
+            "line": 157,
+            "end_line": 157,
+            "name": "buildCustomerQuery",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/util/dao/ResourcePurgeDaoImpl.java",
+            "line": 157,
+            "end_line": 157,
+            "name": "buildCustomerQuery",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 25,
+            "end_line": 25,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 55,
+            "end_line": 55,
+            "name": "readCustomerById",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 87,
+            "end_line": 87,
+            "name": "readCustomersByIds",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 87,
+            "end_line": 87,
+            "name": "readCustomersByIds",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 168,
+            "end_line": 168,
+            "name": "readBatchCustomers",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 168,
+            "end_line": 168,
+            "name": "readBatchCustomers",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 184,
+            "end_line": 184,
+            "name": "readBatchCustomersFromLastID",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 184,
+            "end_line": 184,
+            "name": "readBatchCustomersFromLastID",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 205,
+            "end_line": 205,
+            "name": "readNumberOfCustomers",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerAddressImpl.java",
+            "line": 100,
+            "end_line": 100,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerAttributeImpl.java",
+            "line": 90,
+            "end_line": 90,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+            "line": 572,
+            "end_line": 572,
+            "name": "equals",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+            "line": 572,
+            "end_line": 572,
+            "name": "equals",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerPaymentImpl.java",
+            "line": 113,
+            "end_line": 113,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerPhoneImpl.java",
+            "line": 107,
+            "end_line": 107,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerRoleImpl.java",
+            "line": 65,
+            "end_line": 65,
+            "name": "",
+            "kind": "reference"
+          }
+        ],
+        "edges": [
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/domain/CustomerOfferImpl.java",
+            "line": 22
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/offer/domain/CustomerOfferImpl.java",
+            "line": 66
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/domain/OrderImpl.java",
+            "line": 65
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/order/domain/OrderImpl.java",
+            "line": 151
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/RatingDetailImpl.java",
+            "line": 24
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/RatingDetailImpl.java",
+            "line": 53
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewDetailImpl.java",
+            "line": 29
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewDetailImpl.java",
+            "line": 66
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewFeedbackImpl.java",
+            "line": 24
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/rating/domain/ReviewFeedbackImpl.java",
+            "line": 67
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/util/dao/ResourcePurgeDaoImpl.java",
+            "line": 24
+          },
+          {
+            "from": "buildCustomerQuery",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/util/dao/ResourcePurgeDaoImpl.java",
+            "line": 157
+          },
+          {
+            "from": "buildCustomerQuery",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/util/dao/ResourcePurgeDaoImpl.java",
+            "line": 157
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 25
+          },
+          {
+            "from": "readCustomerById",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 55
+          },
+          {
+            "from": "readCustomersByIds",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 87
+          },
+          {
+            "from": "readCustomersByIds",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 87
+          },
+          {
+            "from": "readBatchCustomers",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 168
+          },
+          {
+            "from": "readBatchCustomers",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 168
+          },
+          {
+            "from": "readBatchCustomersFromLastID",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 184
+          },
+          {
+            "from": "readBatchCustomersFromLastID",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 184
+          },
+          {
+            "from": "readNumberOfCustomers",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerDaoImpl.java",
+            "line": 205
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerAddressImpl.java",
+            "line": 100
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerAttributeImpl.java",
+            "line": 90
+          },
+          {
+            "from": "equals",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+            "line": 572
+          },
+          {
+            "from": "equals",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+            "line": 572
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerPaymentImpl.java",
+            "line": 113
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerPhoneImpl.java",
+            "line": 107
+          },
+          {
+            "from": "",
+            "to": "CustomerImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerRoleImpl.java",
+            "line": 65
+          }
+        ]
+      },
+      "query": {
+        "text": "Find every reference to `CustomerImpl`.",
+        "title": "Find every reference to `CustomerImpl`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "CustomerImpl",
+        "symbol_kind": "class",
+        "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+        "file": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "CustomerImpl",
+        "symbol_kind": "class",
+        "symbol_path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java",
+        "symbol_line": 100,
+        "symbol_end_line": 667,
+        "gold_count": 13,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 13,
+        "gold_sites": 29,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-references-ea8e0f90-customerforgotpasswordsecuritytokenimpl",
+      "task": "references",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find every reference to `CustomerForgotPasswordSecurityTokenImpl`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerForgotPasswordSecurityTokenDaoImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerForgotPasswordSecurityTokenDaoImpl.java",
+            "line": 23,
+            "end_line": 23,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerForgotPasswordSecurityTokenDaoImpl.java",
+            "line": 58,
+            "end_line": 58,
+            "name": "readUnusedTokensByCustomerId",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+            "line": 110,
+            "end_line": 110,
+            "name": "equals",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+            "line": 110,
+            "end_line": 110,
+            "name": "equals",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java",
+            "line": 40,
+            "end_line": 40,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java",
+            "line": 376,
+            "end_line": 376,
+            "name": "sendForgotPasswordNotification",
+            "kind": "reference"
+          }
+        ],
+        "edges": [
+          {
+            "from": "",
+            "to": "CustomerForgotPasswordSecurityTokenImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerForgotPasswordSecurityTokenDaoImpl.java",
+            "line": 23
+          },
+          {
+            "from": "readUnusedTokensByCustomerId",
+            "to": "CustomerForgotPasswordSecurityTokenImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/dao/CustomerForgotPasswordSecurityTokenDaoImpl.java",
+            "line": 58
+          },
+          {
+            "from": "equals",
+            "to": "CustomerForgotPasswordSecurityTokenImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+            "line": 110
+          },
+          {
+            "from": "equals",
+            "to": "CustomerForgotPasswordSecurityTokenImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+            "line": 110
+          },
+          {
+            "from": "",
+            "to": "CustomerForgotPasswordSecurityTokenImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java",
+            "line": 40
+          },
+          {
+            "from": "sendForgotPasswordNotification",
+            "to": "CustomerForgotPasswordSecurityTokenImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java",
+            "line": 376
+          }
+        ]
+      },
+      "query": {
+        "text": "Find every reference to `CustomerForgotPasswordSecurityTokenImpl`.",
+        "title": "Find every reference to `CustomerForgotPasswordSecurityTokenImpl`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "symbol_kind": "class",
+        "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "file": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "symbol_kind": "class",
+        "symbol_path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "symbol_line": 38,
+        "symbol_end_line": 123,
+        "gold_count": 3,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 3,
+        "gold_sites": 6,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-references-0594405a-adminauditablelistener",
+      "task": "references",
+      "repo": "BroadleafCommerce",
+      "base_commit": "5036306fcbd95180135a9ce0dc16b574f032936b",
+      "fix_commit": "0594405a26983e78d5296298964d3b08f4e1c72b",
+      "fix_date": "2026-09-30",
+      "issue_ref": "#5495",
+      "title": "Find every reference to `AdminAuditableListener`.",
+      "problem_statement": "BroadleafCommerce/QA#5495 - Set admin audit creation data for entities with an embedded auditable (#3147)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/ImageStaticAssetImpl.java",
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetDescriptionImpl.java",
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetImpl.java",
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageFieldImpl.java",
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageImpl.java",
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentFieldImpl.java",
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentImpl.java",
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/weave/WeaveAdminAuditable.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/ImageStaticAssetImpl.java",
+            "line": 21,
+            "end_line": 21,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/ImageStaticAssetImpl.java",
+            "line": 35,
+            "end_line": 35,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetDescriptionImpl.java",
+            "line": 28,
+            "end_line": 28,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetDescriptionImpl.java",
+            "line": 49,
+            "end_line": 49,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetImpl.java",
+            "line": 38,
+            "end_line": 38,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetImpl.java",
+            "line": 69,
+            "end_line": 69,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageFieldImpl.java",
+            "line": 28,
+            "end_line": 28,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageFieldImpl.java",
+            "line": 52,
+            "end_line": 52,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageImpl.java",
+            "line": 39,
+            "end_line": 39,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageImpl.java",
+            "line": 80,
+            "end_line": 80,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentFieldImpl.java",
+            "line": 27,
+            "end_line": 27,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentFieldImpl.java",
+            "line": 48,
+            "end_line": 48,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentImpl.java",
+            "line": 42,
+            "end_line": 42,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentImpl.java",
+            "line": 87,
+            "end_line": 87,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+            "line": 33,
+            "end_line": 33,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/weave/WeaveAdminAuditable.java",
+            "line": 24,
+            "end_line": 24,
+            "name": "",
+            "kind": "reference"
+          },
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/weave/WeaveAdminAuditable.java",
+            "line": 34,
+            "end_line": 34,
+            "name": "",
+            "kind": "reference"
+          }
+        ],
+        "edges": [
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/ImageStaticAssetImpl.java",
+            "line": 21
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/ImageStaticAssetImpl.java",
+            "line": 35
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetDescriptionImpl.java",
+            "line": 28
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetDescriptionImpl.java",
+            "line": 49
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetImpl.java",
+            "line": 38
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/file/domain/StaticAssetImpl.java",
+            "line": 69
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageFieldImpl.java",
+            "line": 28
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageFieldImpl.java",
+            "line": 52
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageImpl.java",
+            "line": 39
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageImpl.java",
+            "line": 80
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentFieldImpl.java",
+            "line": 27
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentFieldImpl.java",
+            "line": 48
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentImpl.java",
+            "line": 42
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/structure/domain/StructuredContentImpl.java",
+            "line": 87
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
+            "line": 33
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/weave/WeaveAdminAuditable.java",
+            "line": 24
+          },
+          {
+            "from": "",
+            "to": "AdminAuditableListener",
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/weave/WeaveAdminAuditable.java",
+            "line": 34
+          }
+        ]
+      },
+      "query": {
+        "text": "Find every reference to `AdminAuditableListener`.",
+        "title": "Find every reference to `AdminAuditableListener`.",
         "issue_text": "BroadleafCommerce/QA#5495 - Set admin audit creation data for entities with an embedded auditable (#3147)",
         "symbol": "AdminAuditableListener",
         "symbol_kind": "class",
@@ -769,61 +2935,458 @@
         "symbol_path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java",
         "symbol_line": 31,
         "symbol_end_line": 73,
-        "gold_count": 1,
-        "heuristic_ground_truth": true
+        "gold_count": 9,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
-        "gold_files": 1,
-        "gold_sites": 1,
+        "gold_files": 9,
+        "gold_sites": 17,
         "problem_chars": 105
       }
     },
     {
-      "instance_id": "BroadleafCommerce-loc-ea8e0f90",
-      "task": "localization",
+      "instance_id": "BroadleafCommerce-overrides-ea8e0f90-rollbackauthorize",
+      "task": "overrides",
       "repo": "BroadleafCommerce",
       "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
       "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
       "fix_date": "2026-10-13",
       "issue_ref": "#5504",
-      "title": "Add customer username and password token indexes (#5504) - 7.0.x",
-      "problem_statement": "Add customer username and password token indexes (#5504) - 7.0.x\n\n7.0.x backport of #3151\n\n**A Brief Overview**\nAdds two indexes to fix full table scans in core customer lookups: `CUSTOMER_USERNAME_INDEX` on `BLC_CUSTOMER.USER_NAME` (lookup by username), and `CUST_PWD_TOKEN_CUST_USED_IDX` on `BLC_CUSTOMER_PASSWORD_TOKEN (CUSTOMER_ID, TOKEN_USED_FLAG)` (unused forgot-password tokens). Suggested by Flywire. Release notes need the matching `CREATE INDEX` DDL for sites that don't run `hbm2ddl=update`.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5504",
-      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3152",
+      "title": "Find all methods that override `rollbackAuthorize`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
       "gold": {
         "files": [
-          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
-          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java"
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentRollbackServiceImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentRollbackServiceImpl.java",
+            "line": 56,
+            "end_line": 78,
+            "name": "rollbackAuthorize",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "rollbackAuthorize",
+            "to": "rollbackAuthorize",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentRollbackServiceImpl.java",
+            "line": 56
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all methods that override `rollbackAuthorize`.",
+        "title": "Find all methods that override `rollbackAuthorize`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "rollbackAuthorize",
+        "symbol_kind": "method",
+        "path": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayRollbackService.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayRollbackService.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "rollbackAuthorize",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayRollbackService.java",
+        "symbol_line": 27,
+        "symbol_end_line": 29,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-overrides-ea8e0f90-isperformauthorizeandcapture",
+      "task": "overrides",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all methods that override `isPerformAuthorizeAndCapture`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentConfigurationImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentConfigurationImpl.java",
+            "line": 37,
+            "end_line": 39,
+            "name": "isPerformAuthorizeAndCapture",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "isPerformAuthorizeAndCapture",
+            "to": "isPerformAuthorizeAndCapture",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentConfigurationImpl.java",
+            "line": 37
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all methods that override `isPerformAuthorizeAndCapture`.",
+        "title": "Find all methods that override `isPerformAuthorizeAndCapture`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "isPerformAuthorizeAndCapture",
+        "symbol_kind": "method",
+        "path": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayConfiguration.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayConfiguration.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "isPerformAuthorizeAndCapture",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayConfiguration.java",
+        "symbol_line": 25,
+        "symbol_end_line": 27,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "test"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-overrides-ea8e0f90-getconfiguration",
+      "task": "overrides",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all methods that override `getConfiguration`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentConfigurationServiceImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentConfigurationServiceImpl.java",
+            "line": 47,
+            "end_line": 49,
+            "name": "getConfiguration",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "getConfiguration",
+            "to": "getConfiguration",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/checkout/service/gateway/PassthroughPaymentConfigurationServiceImpl.java",
+            "line": 47
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all methods that override `getConfiguration`.",
+        "title": "Find all methods that override `getConfiguration`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "getConfiguration",
+        "symbol_kind": "method",
+        "path": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayConfigurationService.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayConfigurationService.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "getConfiguration",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/payment/service/AbstractPaymentGatewayConfigurationService.java",
+        "symbol_line": 27,
+        "symbol_end_line": 29,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-no_callers-ea8e0f90-isvalidcheckedvalue",
+      "task": "no_callers",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all callers of `isValidCheckedValue`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [],
+        "hunks": {},
+        "sites": [],
+        "edges": []
+      },
+      "query": {
+        "text": "Find all callers of `isValidCheckedValue`.",
+        "title": "Find all callers of `isValidCheckedValue`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "isValidCheckedValue",
+        "qualified_symbol": "Mod43CheckDigitUtil.isValidCheckedValue",
+        "symbol_kind": "method",
+        "symbol_line": 29,
+        "path": "common/src/main/java/org/broadleafcommerce/common/util/Mod43CheckDigitUtil.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/util/Mod43CheckDigitUtil.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "isValidCheckedValue",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/util/Mod43CheckDigitUtil.java",
+        "symbol_line": 29,
+        "symbol_end_line": 43,
+        "gold_count": 0,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "absence",
+          "callers": 0
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 0,
+        "gold_sites": 0,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-no_callers-ea8e0f90-getjointablefilter",
+      "task": "no_callers",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all callers of `getJoinTableFilter`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [],
+        "hunks": {},
+        "sites": [],
+        "edges": []
+      },
+      "query": {
+        "text": "Find all callers of `getJoinTableFilter`.",
+        "title": "Find all callers of `getJoinTableFilter`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "getJoinTableFilter",
+        "qualified_symbol": "PropertyFilter.getJoinTableFilter",
+        "symbol_kind": "method",
+        "symbol_line": 28,
+        "path": "common/src/main/java/org/broadleafcommerce/common/filter/PropertyFilter.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/filter/PropertyFilter.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "getJoinTableFilter",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/filter/PropertyFilter.java",
+        "symbol_line": 28,
+        "symbol_end_line": 30,
+        "gold_count": 0,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "absence",
+          "callers": 0
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 0,
+        "gold_sites": 0,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-no_callers-ea8e0f90-convertpoundstokilograms",
+      "task": "no_callers",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all callers of `convertPoundsToKilograms`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [],
+        "hunks": {},
+        "sites": [],
+        "edges": []
+      },
+      "query": {
+        "text": "Find all callers of `convertPoundsToKilograms`.",
+        "title": "Find all callers of `convertPoundsToKilograms`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "convertPoundsToKilograms",
+        "qualified_symbol": "UnitOfMeasureUtil.convertPoundsToKilograms",
+        "symbol_kind": "method",
+        "symbol_line": 28,
+        "path": "common/src/main/java/org/broadleafcommerce/common/util/UnitOfMeasureUtil.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/util/UnitOfMeasureUtil.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "convertPoundsToKilograms",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/util/UnitOfMeasureUtil.java",
+        "symbol_line": 28,
+        "symbol_end_line": 30,
+        "gold_count": 0,
+        "heuristic_ground_truth": true,
+        "ambiguity": {
+          "kind": "absence",
+          "callers": 0
+        },
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 0,
+        "gold_sites": 0,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-loc-3ee0024e",
+      "task": "localization",
+      "repo": "BroadleafCommerce",
+      "base_commit": "240ecb09d2abdd5aee81003ad18c742c380c7da0",
+      "fix_commit": "3ee0024efbeaef911585b375e63873ea62e60f5d",
+      "fix_date": "2026-04-08",
+      "issue_ref": "#3107",
+      "title": "Skip repeated class transformation (#3107)",
+      "problem_statement": "Skip repeated class transformation (#3107)\n\n* Skip repeated class transformation\n\n* Fix description formatting in pom.xml\n\n---------\n\nCo-authored-by: Ritesh Adhikari <35038090+riteshadhikari17@users.noreply.github.com>",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/copy/DirectCopyClassTransformer.java"
         ],
         "hunks": {
-          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java": [
-            [
-              26,
-              26
-            ],
-            [
-              38,
-              39
-            ]
-          ],
-          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerImpl.java": [
+          "common/src/main/java/org/broadleafcommerce/common/extensibility/jpa/copy/DirectCopyClassTransformer.java": [
             [
               79,
-              80
+              79
+            ],
+            [
+              129,
+              134
+            ],
+            [
+              142,
+              142
+            ],
+            [
+              327,
+              327
             ]
           ]
         },
         "sites": []
       },
       "query": {
-        "text": "Add customer username and password token indexes (#5504) - 7.0.x\n\n7.0.x backport of #3151\n\n**A Brief Overview**\nAdds two indexes to fix full table scans in core customer lookups: `CUSTOMER_USERNAME_INDEX` on `BLC_CUSTOMER.USER_NAME` (lookup by username), and `CUST_PWD_TOKEN_CUST_USED_IDX` on `BLC_CUSTOMER_PASSWORD_TOKEN (CUSTOMER_ID, TOKEN_USED_FLAG)` (unused forgot-password tokens). Suggested by Flywire. Release notes need the matching `CREATE INDEX` DDL for sites that don't run `hbm2ddl=update`.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5504",
-        "title": "Add customer username and password token indexes (#5504) - 7.0.x",
-        "issue_text": "Add customer username and password token indexes (#5504) - 7.0.x\n\n7.0.x backport of #3151\n\n**A Brief Overview**\nAdds two indexes to fix full table scans in core customer lookups: `CUSTOMER_USERNAME_INDEX` on `BLC_CUSTOMER.USER_NAME` (lookup by username), and `CUST_PWD_TOKEN_CUST_USED_IDX` on `BLC_CUSTOMER_PASSWORD_TOKEN (CUSTOMER_ID, TOKEN_USED_FLAG)` (unused forgot-password tokens). Suggested by Flywire. Release notes need the matching `CREATE INDEX` DDL for sites that don't run `hbm2ddl=update`.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5504"
+        "text": "Skip repeated class transformation (#3107)\n\n* Skip repeated class transformation\n\n* Fix description formatting in pom.xml\n\n---------\n\nCo-authored-by: Ritesh Adhikari <35038090+riteshadhikari17@users.noreply.github.com>",
+        "title": "Skip repeated class transformation (#3107)",
+        "issue_text": "Skip repeated class transformation (#3107)\n\n* Skip repeated class transformation\n\n* Fix description formatting in pom.xml\n\n---------\n\nCo-authored-by: Ritesh Adhikari <35038090+riteshadhikari17@users.noreply.github.com>"
       },
       "meta": {
-        "is_pr_text": true,
+        "is_pr_text": null,
+        "gold_count": 1,
+        "changed_lines": 14,
+        "split": "test"
+      },
+      "flags": {
+        "mentions_gold_path": false
+      },
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 0,
+        "changed_lines": 14,
+        "problem_chars": 218
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-loc-5afe6915",
+      "task": "localization",
+      "repo": "BroadleafCommerce",
+      "base_commit": "15415062d4652a2f542eb50682dd951946670269",
+      "fix_commit": "5afe6915ff3a80b84eeb68ab87ca9a20106dd804",
+      "fix_date": "2025-05-19",
+      "issue_ref": "#3058",
+      "title": "Fix special character MVEL rule creation (#3058)",
+      "problem_statement": "Fix special character MVEL rule creation (#3058)\n\n* BroadleafCommerce/QA#5368\nRemoved redundant replacing\n\n* BroadleafCommerce/QA#5368\nDecodes unicode escapes\n\n---------\n\nCo-authored-by: Roman Mosiienko <rmosiienko@broadleafcommerce.com>",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/web/rulebuilder/DataDTOToMVELTranslator.java",
+          "common/src/main/java/org/broadleafcommerce/common/rule/MvelHelper.java"
+        ],
+        "hunks": {
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/web/rulebuilder/DataDTOToMVELTranslator.java": [
+            [
+              735,
+              735
+            ]
+          ],
+          "common/src/main/java/org/broadleafcommerce/common/rule/MvelHelper.java": [
+            [
+              245,
+              247
+            ],
+            [
+              251,
+              262
+            ]
+          ]
+        },
+        "sites": []
+      },
+      "query": {
+        "text": "Fix special character MVEL rule creation (#3058)\n\n* BroadleafCommerce/QA#5368\nRemoved redundant replacing\n\n* BroadleafCommerce/QA#5368\nDecodes unicode escapes\n\n---------\n\nCo-authored-by: Roman Mosiienko <rmosiienko@broadleafcommerce.com>",
+        "title": "Fix special character MVEL rule creation (#3058)",
+        "issue_text": "Fix special character MVEL rule creation (#3058)\n\n* BroadleafCommerce/QA#5368\nRemoved redundant replacing\n\n* BroadleafCommerce/QA#5368\nDecodes unicode escapes\n\n---------\n\nCo-authored-by: Roman Mosiienko <rmosiienko@broadleafcommerce.com>"
+      },
+      "meta": {
+        "is_pr_text": null,
         "gold_count": 2,
-        "changed_lines": 7
+        "changed_lines": 17,
+        "split": "test"
       },
       "flags": {
         "mentions_gold_path": false
@@ -831,52 +3394,45 @@
       "stats": {
         "gold_files": 2,
         "gold_sites": 0,
-        "changed_lines": 7,
-        "problem_chars": 550
+        "changed_lines": 17,
+        "problem_chars": 237
       }
     },
     {
-      "instance_id": "BroadleafCommerce-loc-0594405a",
+      "instance_id": "BroadleafCommerce-loc-8cd3129f",
       "task": "localization",
       "repo": "BroadleafCommerce",
-      "base_commit": "5036306fcbd95180135a9ce0dc16b574f032936b",
-      "fix_commit": "0594405a26983e78d5296298964d3b08f4e1c72b",
-      "fix_date": "2026-09-30",
-      "issue_ref": "#5495",
-      "title": "Set admin audit creation data for entities with an embedded auditable (#5495)",
-      "problem_statement": "Set admin audit creation data for entities with an embedded auditable (#5495)\n\n**A Brief Overview**\n7.0.x backport of #3146. `AdminAuditableListener` only set `dateCreated`/`createdBy` on persist when the entity itself implemented `AdminAudit` (a check added in #3106 for BroadleafCommerce/QA#5442), so entities that hold an embedded `AdminAuditable` were saved without creation audit data. The \"already set\" check now also looks at the embedded auditable, so creation data is populated again while existing values are still preserved; covered by a new Spock spec.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5495",
-      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3147",
+      "base_commit": "11b20f3b43f5caee79ca9f697688c5fd6f079cc2",
+      "fix_commit": "8cd3129fda88c3c4a893ccb8562b48cb66aa9f8a",
+      "fix_date": "2025-02-03",
+      "issue_ref": "#3047",
+      "title": "Fixed an issue where Too many skus to generate error message does not appear for moved product options (#3047)",
+      "problem_statement": "Fixed an issue where Too many skus to generate error message does not appear for moved product options (#3047)\n\n* Fixed an issue where Too many skus to generate error message does not appear for moved product options\nhttps://github.com/BroadleafCommerce/QA/issues/5347\n\n* Add translation for productOption_description\nhttps://github.com/BroadleafCommerce/QA/issues/5347",
+      "source_url": null,
       "gold": {
         "files": [
-          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java"
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/ProductOptionImpl.java"
         ],
         "hunks": {
-          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/audit/AdminAuditableListener.java": [
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/ProductOptionImpl.java": [
             [
-              24,
-              24
-            ],
-            [
-              41,
-              41
-            ],
-            [
-              48,
-              69
+              158,
+              158
             ]
           ]
         },
         "sites": []
       },
       "query": {
-        "text": "Set admin audit creation data for entities with an embedded auditable (#5495)\n\n**A Brief Overview**\n7.0.x backport of #3146. `AdminAuditableListener` only set `dateCreated`/`createdBy` on persist when the entity itself implemented `AdminAudit` (a check added in #3106 for BroadleafCommerce/QA#5442), so entities that hold an embedded `AdminAuditable` were saved without creation audit data. The \"already set\" check now also looks at the embedded auditable, so creation data is populated again while existing values are still preserved; covered by a new Spock spec.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5495",
-        "title": "Set admin audit creation data for entities with an embedded auditable (#5495)",
-        "issue_text": "Set admin audit creation data for entities with an embedded auditable (#5495)\n\n**A Brief Overview**\n7.0.x backport of #3146. `AdminAuditableListener` only set `dateCreated`/`createdBy` on persist when the entity itself implemented `AdminAudit` (a check added in #3106 for BroadleafCommerce/QA#5442), so entities that hold an embedded `AdminAuditable` were saved without creation audit data. The \"already set\" check now also looks at the embedded auditable, so creation data is populated again while existing values are still preserved; covered by a new Spock spec.\n\n**Link to QA issue**\nBroadleafCommerce/QA#5495"
+        "text": "Fixed an issue where Too many skus to generate error message does not appear for moved product options (#3047)\n\n* Fixed an issue where Too many skus to generate error message does not appear for moved product options\nhttps://github.com/BroadleafCommerce/QA/issues/5347\n\n* Add translation for productOption_description\nhttps://github.com/BroadleafCommerce/QA/issues/5347",
+        "title": "Fixed an issue where Too many skus to generate error message does not appear for moved product options (#3047)",
+        "issue_text": "Fixed an issue where Too many skus to generate error message does not appear for moved product options (#3047)\n\n* Fixed an issue where Too many skus to generate error message does not appear for moved product options\nhttps://github.com/BroadleafCommerce/QA/issues/5347\n\n* Add translation for productOption_description\nhttps://github.com/BroadleafCommerce/QA/issues/5347"
       },
       "meta": {
-        "is_pr_text": true,
+        "is_pr_text": null,
         "gold_count": 1,
-        "changed_lines": 25
+        "changed_lines": 2,
+        "split": "test"
       },
       "flags": {
         "mentions_gold_path": false
@@ -884,21 +3440,400 @@
       "stats": {
         "gold_files": 1,
         "gold_sites": 0,
-        "changed_lines": 25,
-        "problem_chars": 612
+        "changed_lines": 2,
+        "problem_chars": 369
       }
     },
     {
-      "instance_id": "BroadleafCommerce-callers-ea8e0f90-customerforgotpasswordsecuritytokenimpl",
-      "task": "callers",
+      "instance_id": "BroadleafCommerce-loc-df9aa045",
+      "task": "localization",
+      "repo": "BroadleafCommerce",
+      "base_commit": "86935362bc83608800eeb54262c4ade40a450642",
+      "fix_commit": "df9aa045a2d2fcaf258afa822ed93b1bb50433b0",
+      "fix_date": "2024-03-25",
+      "issue_ref": "#2973",
+      "title": "Adding checking of regex property to RegexPropertyValidator (#2973)",
+      "problem_statement": "Adding checking of regex property to RegexPropertyValidator (#2973)\n\n* QA-5220: added initExploitProtectionService in RegexPropertyValidator; in ProductBundleSkuBundleItemValidator fixed class for LOG\n\n* QA-5220: updated message in logs\n\n* QA-5220: fixed getFileExtension()\n\n---------\n\nCo-authored-by: Orest Katruk <okatruk@broadleafcommerce.com>",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-admin-module/src/main/java/org/broadleafcommerce/admin/persistence/validation/ProductBundleSkuBundleItemValidator.java",
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/validation/RegexPropertyValidator.java"
+        ],
+        "hunks": {
+          "admin/broadleaf-admin-module/src/main/java/org/broadleafcommerce/admin/persistence/validation/ProductBundleSkuBundleItemValidator.java": [
+            [
+              29,
+              29
+            ],
+            [
+              47,
+              47
+            ]
+          ],
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/persistence/validation/RegexPropertyValidator.java": [
+            [
+              22,
+              22
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              30,
+              30
+            ],
+            [
+              32,
+              32
+            ],
+            [
+              37,
+              38
+            ],
+            [
+              80,
+              91
+            ],
+            [
+              105,
+              121
+            ]
+          ]
+        },
+        "sites": []
+      },
+      "query": {
+        "text": "Adding checking of regex property to RegexPropertyValidator (#2973)\n\n* QA-5220: added initExploitProtectionService in RegexPropertyValidator; in ProductBundleSkuBundleItemValidator fixed class for LOG\n\n* QA-5220: updated message in logs\n\n* QA-5220: fixed getFileExtension()\n\n---------\n\nCo-authored-by: Orest Katruk <okatruk@broadleafcommerce.com>",
+        "title": "Adding checking of regex property to RegexPropertyValidator (#2973)",
+        "issue_text": "Adding checking of regex property to RegexPropertyValidator (#2973)\n\n* QA-5220: added initExploitProtectionService in RegexPropertyValidator; in ProductBundleSkuBundleItemValidator fixed class for LOG\n\n* QA-5220: updated message in logs\n\n* QA-5220: fixed getFileExtension()\n\n---------\n\nCo-authored-by: Orest Katruk <okatruk@broadleafcommerce.com>"
+      },
+      "meta": {
+        "is_pr_text": null,
+        "gold_count": 2,
+        "changed_lines": 39,
+        "split": "train"
+      },
+      "flags": {
+        "mentions_gold_path": false
+      },
+      "stats": {
+        "gold_files": 2,
+        "gold_sites": 0,
+        "changed_lines": 39,
+        "problem_chars": 346
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-implementations-ea8e0f90-templatecacheextensionhandler",
+      "task": "implementations",
       "repo": "BroadleafCommerce",
       "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
       "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
       "fix_date": "2026-10-13",
       "issue_ref": "#5504",
-      "title": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
+      "title": "Find all types that extend or implement `TemplateCacheExtensionHandler`.",
       "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
-      "source_url": "https://github.com/BroadleafCommerce/BroadleafCommerce/pull/3152",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionManager.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionManager.java",
+            "line": 23,
+            "end_line": 66,
+            "name": "TemplateCacheExtensionManager",
+            "kind": "class"
+          }
+        ],
+        "edges": [
+          {
+            "from": "TemplateCacheExtensionHandler",
+            "to": "TemplateCacheExtensionManager",
+            "path": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionManager.java",
+            "line": 23
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all types that extend or implement `TemplateCacheExtensionHandler`.",
+        "title": "Find all types that extend or implement `TemplateCacheExtensionHandler`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "TemplateCacheExtensionHandler",
+        "symbol_kind": "interface",
+        "path": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionHandler.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionHandler.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "TemplateCacheExtensionHandler",
+        "symbol_kind": "interface",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/extension/TemplateCacheExtensionHandler.java",
+        "symbol_line": 20,
+        "symbol_end_line": 26,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-implementations-ea8e0f90-parameterconverter",
+      "task": "implementations",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all types that extend or implement `ParameterConverter`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/BooleanParameterConverter.java",
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/DoubleParameterConverter.java",
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/FloatParameterConverter.java",
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/IntParameterConverter.java",
+          "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/RectangleParameterConverter.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/BooleanParameterConverter.java",
+            "line": 24,
+            "end_line": 37,
+            "name": "BooleanParameterConverter",
+            "kind": "class"
+          },
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/DoubleParameterConverter.java",
+            "line": 24,
+            "end_line": 39,
+            "name": "DoubleParameterConverter",
+            "kind": "class"
+          },
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/FloatParameterConverter.java",
+            "line": 24,
+            "end_line": 38,
+            "name": "FloatParameterConverter",
+            "kind": "class"
+          },
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/IntParameterConverter.java",
+            "line": 24,
+            "end_line": 38,
+            "name": "IntParameterConverter",
+            "kind": "class"
+          },
+          {
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/RectangleParameterConverter.java",
+            "line": 27,
+            "end_line": 47,
+            "name": "RectangleParameterConverter",
+            "kind": "class"
+          }
+        ],
+        "edges": [
+          {
+            "from": "ParameterConverter",
+            "to": "BooleanParameterConverter",
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/BooleanParameterConverter.java",
+            "line": 24
+          },
+          {
+            "from": "ParameterConverter",
+            "to": "DoubleParameterConverter",
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/DoubleParameterConverter.java",
+            "line": 24
+          },
+          {
+            "from": "ParameterConverter",
+            "to": "FloatParameterConverter",
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/FloatParameterConverter.java",
+            "line": 24
+          },
+          {
+            "from": "ParameterConverter",
+            "to": "IntParameterConverter",
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/IntParameterConverter.java",
+            "line": 24
+          },
+          {
+            "from": "ParameterConverter",
+            "to": "RectangleParameterConverter",
+            "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/impl/RectangleParameterConverter.java",
+            "line": 27
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all types that extend or implement `ParameterConverter`.",
+        "title": "Find all types that extend or implement `ParameterConverter`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "ParameterConverter",
+        "symbol_kind": "interface",
+        "path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/ParameterConverter.java",
+        "file": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/ParameterConverter.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "ParameterConverter",
+        "symbol_kind": "interface",
+        "symbol_path": "admin/broadleaf-open-admin-platform/src/main/java/org/broadleafcommerce/openadmin/server/service/artifact/image/effects/chain/conversion/ParameterConverter.java",
+        "symbol_line": 20,
+        "symbol_end_line": 24,
+        "gold_count": 5,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 5,
+        "gold_sites": 5,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-implementations-ea8e0f90-locatable",
+      "task": "implementations",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all types that extend or implement `Locatable`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageImpl.java",
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/url/domain/URLHandlerImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/CategoryImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/ProductBundleImpl.java",
+          "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/ProductImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageImpl.java",
+            "line": 171,
+            "end_line": 497,
+            "name": "PageImpl",
+            "kind": "class"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/url/domain/URLHandlerImpl.java",
+            "line": 67,
+            "end_line": 250,
+            "name": "URLHandlerImpl",
+            "kind": "class"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/CategoryImpl.java",
+            "line": 125,
+            "end_line": 1477,
+            "name": "CategoryImpl",
+            "kind": "class"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/ProductBundleImpl.java",
+            "line": 59,
+            "end_line": 309,
+            "name": "ProductBundleImpl",
+            "kind": "class"
+          },
+          {
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/ProductImpl.java",
+            "line": 164,
+            "end_line": 1227,
+            "name": "ProductImpl",
+            "kind": "class"
+          }
+        ],
+        "edges": [
+          {
+            "from": "Locatable",
+            "to": "PageImpl",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/domain/PageImpl.java",
+            "line": 171
+          },
+          {
+            "from": "Locatable",
+            "to": "URLHandlerImpl",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/url/domain/URLHandlerImpl.java",
+            "line": 67
+          },
+          {
+            "from": "Locatable",
+            "to": "CategoryImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/CategoryImpl.java",
+            "line": 125
+          },
+          {
+            "from": "Locatable",
+            "to": "ProductBundleImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/ProductBundleImpl.java",
+            "line": 59
+          },
+          {
+            "from": "Locatable",
+            "to": "ProductImpl",
+            "path": "core/broadleaf-framework/src/main/java/org/broadleafcommerce/core/catalog/domain/ProductImpl.java",
+            "line": 164
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all types that extend or implement `Locatable`.",
+        "title": "Find all types that extend or implement `Locatable`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "Locatable",
+        "symbol_kind": "interface",
+        "path": "common/src/main/java/org/broadleafcommerce/common/web/Locatable.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/web/Locatable.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "Locatable",
+        "symbol_kind": "interface",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/web/Locatable.java",
+        "symbol_line": 20,
+        "symbol_end_line": 30,
+        "gold_count": 5,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 5,
+        "gold_sites": 5,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-impact-ea8e0f90-customerforgotpasswordsecuritytokenimpl",
+      "task": "impact",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "What code is affected if `CustomerForgotPasswordSecurityTokenImpl` changes?",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
       "gold": {
         "files": [
           "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java"
@@ -912,11 +3847,19 @@
             "name": "sendForgotPasswordNotification",
             "kind": "method"
           }
+        ],
+        "edges": [
+          {
+            "from": "sendForgotPasswordNotification",
+            "to": "CustomerForgotPasswordSecurityTokenImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java",
+            "line": 376
+          }
         ]
       },
       "query": {
-        "text": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
-        "title": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
+        "text": "What code is affected if `CustomerForgotPasswordSecurityTokenImpl` changes?",
+        "title": "What code is affected if `CustomerForgotPasswordSecurityTokenImpl` changes?",
         "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
         "symbol": "CustomerForgotPasswordSecurityTokenImpl",
         "symbol_kind": "class",
@@ -931,13 +3874,306 @@
         "symbol_line": 38,
         "symbol_end_line": 123,
         "gold_count": 1,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
         "gold_files": 1,
         "gold_sites": 1,
         "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-impact-d7bcd8c7-addofflinerestriction",
+      "task": "impact",
+      "repo": "BroadleafCommerce",
+      "base_commit": "b42a60945e0e564c51e852a637172f83ad48d365",
+      "fix_commit": "d7bcd8c747ae2a90e0455d535717d879323cba11",
+      "fix_date": "2026-05-04",
+      "issue_ref": "#3118",
+      "title": "What code is affected if `addOfflineRestriction` changes?",
+      "problem_statement": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 123,
+            "end_line": 140,
+            "name": "findPageByURI",
+            "kind": "method"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 180,
+            "end_line": 199,
+            "name": "findPageByURIAndActiveDate",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "findPageByURI",
+            "to": "addOfflineRestriction",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 135
+          },
+          {
+            "from": "findPageByURIAndActiveDate",
+            "to": "addOfflineRestriction",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 191
+          }
+        ]
+      },
+      "query": {
+        "text": "What code is affected if `addOfflineRestriction` changes?",
+        "title": "What code is affected if `addOfflineRestriction` changes?",
+        "issue_text": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+        "symbol": "addOfflineRestriction",
+        "symbol_kind": "method",
+        "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "file": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "addOfflineRestriction",
+        "symbol_kind": "method",
+        "symbol_path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "symbol_line": 157,
+        "symbol_end_line": 165,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "test"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
+        "problem_chars": 100
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-impact-d7bcd8c7-addactivedaterestrictions",
+      "task": "impact",
+      "repo": "BroadleafCommerce",
+      "base_commit": "b42a60945e0e564c51e852a637172f83ad48d365",
+      "fix_commit": "d7bcd8c747ae2a90e0455d535717d879323cba11",
+      "fix_date": "2026-05-04",
+      "issue_ref": "#3118",
+      "title": "What code is affected if `addActiveDateRestrictions` changes?",
+      "problem_statement": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 123,
+            "end_line": 140,
+            "name": "findPageByURI",
+            "kind": "method"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 180,
+            "end_line": 199,
+            "name": "findPageByURIAndActiveDate",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "findPageByURI",
+            "to": "addActiveDateRestrictions",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 134
+          },
+          {
+            "from": "findPageByURIAndActiveDate",
+            "to": "addActiveDateRestrictions",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 192
+          }
+        ]
+      },
+      "query": {
+        "text": "What code is affected if `addActiveDateRestrictions` changes?",
+        "title": "What code is affected if `addActiveDateRestrictions` changes?",
+        "issue_text": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+        "symbol": "addActiveDateRestrictions",
+        "symbol_kind": "method",
+        "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "file": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "addActiveDateRestrictions",
+        "symbol_kind": "method",
+        "symbol_path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "symbol_line": 142,
+        "symbol_end_line": 155,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "test"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
+        "problem_chars": 100
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-callers-ea8e0f90-customerforgotpasswordsecuritytokenimpl",
+      "task": "callers",
+      "repo": "BroadleafCommerce",
+      "base_commit": "9a5d7e909c1148420b8738f1561308879baff1de",
+      "fix_commit": "ea8e0f9086ff1e5ff52caa22d43b23f81b72e22f",
+      "fix_date": "2026-10-13",
+      "issue_ref": "#5504",
+      "title": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
+      "problem_statement": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java",
+            "line": 362,
+            "end_line": 393,
+            "name": "sendForgotPasswordNotification",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "sendForgotPasswordNotification",
+            "to": "CustomerForgotPasswordSecurityTokenImpl",
+            "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/service/CustomerServiceImpl.java",
+            "line": 376
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
+        "title": "Find all callers of `CustomerForgotPasswordSecurityTokenImpl`.",
+        "issue_text": "BroadleafCommerce/QA#5504 - Add customer username and password token indexes (#3152)\n\n(cherry picked from commit a72253ec786b934ab89d5e309db49a5eb2f0315c)",
+        "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "qualified_symbol": "CustomerForgotPasswordSecurityTokenImpl.CustomerForgotPasswordSecurityTokenImpl",
+        "symbol_kind": "class",
+        "symbol_line": 38,
+        "path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "file": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "CustomerForgotPasswordSecurityTokenImpl",
+        "symbol_kind": "class",
+        "symbol_path": "core/broadleaf-profile/src/main/java/org/broadleafcommerce/profile/core/domain/CustomerForgotPasswordSecurityTokenImpl.java",
+        "symbol_line": 38,
+        "symbol_end_line": 123,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 154
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-callers-d7bcd8c7-addofflinerestriction",
+      "task": "callers",
+      "repo": "BroadleafCommerce",
+      "base_commit": "b42a60945e0e564c51e852a637172f83ad48d365",
+      "fix_commit": "d7bcd8c747ae2a90e0455d535717d879323cba11",
+      "fix_date": "2026-05-04",
+      "issue_ref": "#3118",
+      "title": "Find all callers of `addOfflineRestriction`.",
+      "problem_statement": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 123,
+            "end_line": 140,
+            "name": "findPageByURI",
+            "kind": "method"
+          },
+          {
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 180,
+            "end_line": 199,
+            "name": "findPageByURIAndActiveDate",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "findPageByURI",
+            "to": "addOfflineRestriction",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 135
+          },
+          {
+            "from": "findPageByURIAndActiveDate",
+            "to": "addOfflineRestriction",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 191
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all callers of `addOfflineRestriction`.",
+        "title": "Find all callers of `addOfflineRestriction`.",
+        "issue_text": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
+        "symbol": "addOfflineRestriction",
+        "qualified_symbol": "PageDaoImpl.addOfflineRestriction",
+        "symbol_kind": "method",
+        "symbol_line": 157,
+        "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "file": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "addOfflineRestriction",
+        "symbol_kind": "method",
+        "symbol_path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+        "symbol_line": 157,
+        "symbol_end_line": 165,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "test"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
+        "problem_chars": 100
       }
     },
     {
@@ -971,6 +4207,20 @@
             "name": "findPageByURIAndActiveDate",
             "kind": "method"
           }
+        ],
+        "edges": [
+          {
+            "from": "findPageByURI",
+            "to": "addActiveDateRestrictions",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 134
+          },
+          {
+            "from": "findPageByURIAndActiveDate",
+            "to": "addActiveDateRestrictions",
+            "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
+            "line": 192
+          }
         ]
       },
       "query": {
@@ -978,7 +4228,9 @@
         "title": "Find all callers of `addActiveDateRestrictions`.",
         "issue_text": "Fix Performance degradation and deep-pagination overhead during CMS Page SiteMap generation. (#3118)",
         "symbol": "addActiveDateRestrictions",
+        "qualified_symbol": "PageDaoImpl.addActiveDateRestrictions",
         "symbol_kind": "method",
+        "symbol_line": 142,
         "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
         "file": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/page/dao/PageDaoImpl.java",
         "language": "java"
@@ -990,13 +4242,278 @@
         "symbol_line": 142,
         "symbol_end_line": 155,
         "gold_count": 1,
-        "heuristic_ground_truth": true
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
       },
       "flags": {},
       "stats": {
         "gold_files": 1,
         "gold_sites": 2,
         "problem_chars": 100
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-callers-86900d35-buildinclausetemplate",
+      "task": "callers",
+      "repo": "BroadleafCommerce",
+      "base_commit": "3d0dcd1a0ad980eb6d6c6ebdb5cd3b522090b23d",
+      "fix_commit": "86900d3525e97eb1f288821776f396d2cbd9450b",
+      "fix_date": "2026-04-27",
+      "issue_ref": null,
+      "title": "Find all callers of `buildInClauseTemplate`.",
+      "problem_statement": "Replace the usage of common-lang with lang3 and exclude it from ESAPI",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+            "line": 80,
+            "end_line": 106,
+            "name": "executeUpdateQuery",
+            "kind": "method"
+          },
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+            "line": 123,
+            "end_line": 153,
+            "name": "executeUpdateQuery",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "executeUpdateQuery",
+            "to": "buildInClauseTemplate",
+            "path": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+            "line": 84
+          },
+          {
+            "from": "executeUpdateQuery",
+            "to": "buildInClauseTemplate",
+            "path": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+            "line": 127
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all callers of `buildInClauseTemplate`.",
+        "title": "Find all callers of `buildInClauseTemplate`.",
+        "issue_text": "Replace the usage of common-lang with lang3 and exclude it from ESAPI",
+        "symbol": "buildInClauseTemplate",
+        "qualified_symbol": "UpdateExecutor.buildInClauseTemplate",
+        "symbol_kind": "method",
+        "symbol_line": 182,
+        "path": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "buildInClauseTemplate",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+        "symbol_line": 182,
+        "symbol_end_line": 186,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 2,
+        "problem_chars": 69
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-callees-86900d35-getcontentitems",
+      "task": "callees",
+      "repo": "BroadleafCommerce",
+      "base_commit": "3d0dcd1a0ad980eb6d6c6ebdb5cd3b522090b23d",
+      "fix_commit": "86900d3525e97eb1f288821776f396d2cbd9450b",
+      "fix_date": "2026-04-27",
+      "issue_ref": null,
+      "title": "Find all functions called by `getContentItems`.",
+      "problem_statement": "Replace the usage of common-lang with lang3 and exclude it from ESAPI",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "common/src/main/java/org/broadleafcommerce/common/extension/ExtensionManager.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/extension/ExtensionManager.java",
+            "line": 64,
+            "end_line": 66,
+            "name": "getProxy",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "getContentItems",
+            "to": "getProxy",
+            "path": "common/src/main/java/org/broadleafcommerce/common/extension/ExtensionManager.java",
+            "line": 287
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all functions called by `getContentItems`.",
+        "title": "Find all functions called by `getContentItems`.",
+        "issue_text": "Replace the usage of common-lang with lang3 and exclude it from ESAPI",
+        "symbol": "getContentItems",
+        "symbol_kind": "method",
+        "path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/web/processor/ContentProcessor.java",
+        "file": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/web/processor/ContentProcessor.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "getContentItems",
+        "symbol_kind": "method",
+        "symbol_path": "admin/broadleaf-contentmanagement-module/src/main/java/org/broadleafcommerce/cms/web/processor/ContentProcessor.java",
+        "symbol_line": 269,
+        "symbol_end_line": 290,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 69
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-callees-86900d35-executetargetedcacheinvalidation",
+      "task": "callees",
+      "repo": "BroadleafCommerce",
+      "base_commit": "3d0dcd1a0ad980eb6d6c6ebdb5cd3b522090b23d",
+      "fix_commit": "86900d3525e97eb1f288821776f396d2cbd9450b",
+      "fix_date": "2026-04-27",
+      "issue_ref": null,
+      "title": "Find all functions called by `executeTargetedCacheInvalidation`.",
+      "problem_statement": "Replace the usage of common-lang with lang3 and exclude it from ESAPI",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "common/src/main/java/org/broadleafcommerce/common/util/dao/HibernateMappingProvider.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/util/dao/HibernateMappingProvider.java",
+            "line": 73,
+            "end_line": 75,
+            "name": "getMapping",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "executeTargetedCacheInvalidation",
+            "to": "getMapping",
+            "path": "common/src/main/java/org/broadleafcommerce/common/util/dao/HibernateMappingProvider.java",
+            "line": 168
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all functions called by `executeTargetedCacheInvalidation`.",
+        "title": "Find all functions called by `executeTargetedCacheInvalidation`.",
+        "issue_text": "Replace the usage of common-lang with lang3 and exclude it from ESAPI",
+        "symbol": "executeTargetedCacheInvalidation",
+        "symbol_kind": "method",
+        "path": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+        "file": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "executeTargetedCacheInvalidation",
+        "symbol_kind": "method",
+        "symbol_path": "common/src/main/java/org/broadleafcommerce/common/util/UpdateExecutor.java",
+        "symbol_line": 161,
+        "symbol_end_line": 174,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 69
+      }
+    },
+    {
+      "instance_id": "BroadleafCommerce-callees-dae7802d-isrecursiveproductselection",
+      "task": "callees",
+      "repo": "BroadleafCommerce",
+      "base_commit": "095fd472575c0766b465ea5c21f633284d069665",
+      "fix_commit": "dae7802da132fe75c28b9525889ea8fc8e9ebaa0",
+      "fix_date": "2026-04-08",
+      "issue_ref": "#5453",
+      "title": "Find all functions called by `isRecursiveProductSelection`.",
+      "problem_statement": "Revert \"Remove the add-ons from the offer rules dropdown (#5453) (#3103)\"\n\nThis reverts commit 54ab2a950b429ed5f06ce38af104b658342ce3ac.",
+      "source_url": null,
+      "gold": {
+        "files": [
+          "common/src/main/java/org/broadleafcommerce/common/util/BLCArrayUtils.java"
+        ],
+        "hunks": {},
+        "sites": [
+          {
+            "path": "common/src/main/java/org/broadleafcommerce/common/util/BLCArrayUtils.java",
+            "line": 55,
+            "end_line": 64,
+            "name": "asList",
+            "kind": "method"
+          }
+        ],
+        "edges": [
+          {
+            "from": "isRecursiveProductSelection",
+            "to": "asList",
+            "path": "common/src/main/java/org/broadleafcommerce/common/util/BLCArrayUtils.java",
+            "line": 501
+          }
+        ]
+      },
+      "query": {
+        "text": "Find all functions called by `isRecursiveProductSelection`.",
+        "title": "Find all functions called by `isRecursiveProductSelection`.",
+        "issue_text": "Revert \"Remove the add-ons from the offer rules dropdown (#5453) (#3103)\"\n\nThis reverts commit 54ab2a950b429ed5f06ce38af104b658342ce3ac.",
+        "symbol": "isRecursiveProductSelection",
+        "symbol_kind": "method",
+        "path": "admin/broadleaf-admin-module/src/main/java/org/broadleafcommerce/admin/server/service/handler/ProductCustomPersistenceHandler.java",
+        "file": "admin/broadleaf-admin-module/src/main/java/org/broadleafcommerce/admin/server/service/handler/ProductCustomPersistenceHandler.java",
+        "language": "java"
+      },
+      "meta": {
+        "symbol": "isRecursiveProductSelection",
+        "symbol_kind": "method",
+        "symbol_path": "admin/broadleaf-admin-module/src/main/java/org/broadleafcommerce/admin/server/service/handler/ProductCustomPersistenceHandler.java",
+        "symbol_line": 500,
+        "symbol_end_line": 504,
+        "gold_count": 1,
+        "heuristic_ground_truth": true,
+        "ambiguity": null,
+        "split": "train"
+      },
+      "flags": {},
+      "stats": {
+        "gold_files": 1,
+        "gold_sites": 1,
+        "problem_chars": 136
       }
     }
   ]

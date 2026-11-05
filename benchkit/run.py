@@ -66,6 +66,7 @@ def _select_instances(manifest: dict, args, tasks: dict, repos: dict) -> list[di
     task_names = {name.strip() for name in args.tasks.split(",") if name.strip()} if getattr(args, "tasks", None) else None
     repo_names = set(args.repo) if getattr(args, "repo", None) else None
     instance_ids = set(args.instance) if getattr(args, "instance", None) else None
+    split = getattr(args, "split", None)
     output = []
     for instance in instances:
         if task_names and instance.get("task") not in task_names:
@@ -73,6 +74,8 @@ def _select_instances(manifest: dict, args, tasks: dict, repos: dict) -> list[di
         if repo_names and instance.get("repo") not in repo_names:
             continue
         if instance_ids and instance.get("instance_id") not in instance_ids:
+            continue
+        if split and (instance.get("meta") or {}).get("split") != split:
             continue
         if instance.get("task") not in tasks:
             continue
@@ -108,6 +111,14 @@ def cmd_run(home: BenchHome, args) -> Path:
         raise SystemExit("no enabled tools selected")
     if not tasks:
         raise SystemExit("no enabled tasks selected")
+    if getattr(args, "impact_depth", None) is not None:
+        tasks = {
+            name: (
+                {**cfg, "impact_depth": int(args.impact_depth)}
+                if cfg.get("miner") == "structural" else cfg
+            )
+            for name, cfg in tasks.items()
+        }
 
     # Named repositories that are disabled are still allowed; this lets a user
     # run a single disabled repo deliberately.
@@ -176,6 +187,10 @@ def cmd_run(home: BenchHome, args) -> Path:
         "query_mode": args.query_mode,
         "max_query_chars": args.max_query_chars,
         "jobs": args.jobs,
+        "repeat": getattr(args, "repeat", 1),
+        "split": getattr(args, "split", None),
+        "scope_filter": getattr(args, "scope_filter", True),
+        "impact_depth": getattr(args, "impact_depth", None),
         "tool_config": {name: active[name] for name in active},
         "tool_versions": {},
         "repo_heads": {},
@@ -249,8 +264,16 @@ def cmd_run(home: BenchHome, args) -> Path:
                         "error": None,
                         "prepare_s": prepare_s,
                         "query_s": None,
+                        "query_s_samples": [],
                         "metrics": None,
                         "top_paths": [],
+                        "flags": instance.get("flags") or {},
+                        "split": (instance.get("meta") or {}).get("split"),
+                        "ambiguity": (instance.get("meta") or {}).get("ambiguity"),
+                        "out_of_scope": 0,
+                        "empty_result": False,
+                        "raw_items": 0,
+                        "parsed_items": 0,
                     }
                     if prepare_error:
                         row["error"] = prepare_error
@@ -262,6 +285,11 @@ def cmd_run(home: BenchHome, args) -> Path:
                                 worktree, repo_cfg, args, prepare_s=prepare_s,
                             )
                             row["query_s"] = record["query_s"]
+                            row["query_s_samples"] = record.get("query_s_samples") or []
+                            row["out_of_scope"] = record.get("out_of_scope", 0)
+                            row["empty_result"] = record.get("empty_result", False)
+                            row["raw_items"] = record.get("raw_items", 0)
+                            row["parsed_items"] = record.get("parsed_items", 0)
                             row["top_paths"] = unique_paths(record["results"], 10)
                             row["metrics"] = score_instance(
                                 tasks[instance["task"]].get("scorer", "localization"),
@@ -293,8 +321,16 @@ def cmd_run(home: BenchHome, args) -> Path:
                         "error": f"{type(exc).__name__}: {exc}"[:1200],
                         "prepare_s": prepare_s,
                         "query_s": None,
+                        "query_s_samples": [],
                         "metrics": None,
                         "top_paths": [],
+                        "flags": instance.get("flags") or {},
+                        "split": (instance.get("meta") or {}).get("split"),
+                        "ambiguity": (instance.get("meta") or {}).get("ambiguity"),
+                        "out_of_scope": 0,
+                        "empty_result": False,
+                        "raw_items": 0,
+                        "parsed_items": 0,
                     })
             finally:
                 if not args.skip_cleanup and not args.keep_worktrees:

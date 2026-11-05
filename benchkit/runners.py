@@ -5,7 +5,7 @@ import fnmatch
 import json
 import re
 
-from .parsers import parse_cbm, parse_cbm_semantic, parse_results
+from .parsers import PARSERS, parse_cbm, parse_cbm_semantic, parse_results
 from .process import run_cmd
 from .text import normalize_path, render
 
@@ -52,6 +52,33 @@ def rg_localization(cfg, repo, ctx, repo_cfg, timeout=300):
 
 def rg_symbol(cfg, repo, ctx, repo_cfg, timeout=300):
     """Literal symbol matches as a file/line baseline for definition tasks."""
+    symbol = str(ctx.get("symbol") or "").strip()
+    if not symbol:
+        return [], 0.0
+    rc, out, err, dt = run_cmd(
+        [*_rg_base(repo_cfg), "-n", "-w", "-F", "--", symbol, "."],
+        cwd=repo,
+        timeout=timeout,
+    )
+    if rc not in (0, 1):
+        raise RuntimeError(f"rg failed: {err.strip()[:300]}")
+    items = []
+    for line in out.splitlines():
+        match = re.match(r"^(.*?):(\d+):", line)
+        if not match:
+            continue
+        items.append({
+            "path": normalize_path(match.group(1), repo),
+            "line": int(match.group(2)),
+            "end_line": int(match.group(2)),
+            "score": None,
+            "symbol": symbol,
+        })
+    return items[: int(ctx.get("k", 10))], round(dt, 3)
+
+
+def rg_references(cfg, repo, ctx, repo_cfg, timeout=300):
+    """Literal identifier occurrences as a file/line reference baseline."""
     symbol = str(ctx.get("symbol") or "").strip()
     if not symbol:
         return [], 0.0
@@ -209,9 +236,52 @@ def cbm_fusion(cfg, repo, ctx, repo_cfg, timeout=300):
     return items, round(elapsed, 3)
 
 
+def cbm_references(cfg, repo, ctx, repo_cfg, timeout=300):
+    """Combine graph reference edges with symbol/source matches.
+
+    The graph carries precise ``CALLS``/``USAGE`` edges; ``search_code`` adds
+    declarations/imports/annotations that the usage graph does not model. The
+    two lists are merged and deduplicated at the ``(path, line, symbol)`` level.
+    """
+    elapsed = 0.0
+    items: list[dict] = []
+    sources = [
+        (cfg.get("argv"), cfg.get("parse", "cbm_query")),
+        (cfg.get("fallback_argv"), cfg.get("fallback_parse", "cbm")),
+    ]
+    for argv, parser in sources:
+        if not argv or parser not in PARSERS:
+            continue
+        rc, out, _err, dt = run_cmd(
+            [render(token, ctx) for token in argv],
+            cwd=repo,
+            timeout=timeout,
+        )
+        elapsed += dt
+        if rc != 0:
+            continue
+        items.extend(parse_results(parser, out, repo, cfg))
+    seen: set[tuple] = set()
+    merged: list[dict] = []
+    for item in items:
+        key = (
+            item.get("path"), item.get("line"),
+            item.get("end_line"), item.get("symbol"),
+        )
+        if key in seen:
+            continue
+        if not _cbm_path_allowed(item.get("path") or "", repo_cfg):
+            continue
+        seen.add(key)
+        merged.append(item)
+    return merged[: int(ctx.get("k", 10))], round(elapsed, 3)
+
+
 RUNNERS = {
     "rg_localization": rg_localization,
+    "cbm_references": cbm_references,
     "rg_symbol": rg_symbol,
+    "rg_references": rg_references,
     "rg_callers": rg_callers,
     "cbm_fusion": cbm_fusion,
 }

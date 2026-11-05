@@ -194,10 +194,17 @@ def _task_template(task_cfg: dict, task_name: str, symbol: Symbol | None, path: 
     if not template:
         template = {
             "symbol_definition": "Where is `{symbol}` defined?",
+            "symbol_definitions": "List every definition of `{symbol}`.",
             "callers": "Find all callers of `{symbol}`.",
             "callees": "Find all functions called by `{symbol}`.",
             "impact": "What code is affected if `{symbol}` changes?",
             "dependents": "Which files import `{path}`?",
+            "references": "Find every reference to `{symbol}`.",
+            "implementations": (
+                "Find all types that extend or implement `{symbol}`."
+            ),
+            "overrides": "Find all methods that override `{symbol}`.",
+            "no_callers": "Find all callers of `{symbol}`.",
         }.get(task_name, "Find `{symbol}`")
     return (
         str(template)
@@ -206,6 +213,25 @@ def _task_template(task_cfg: dict, task_name: str, symbol: Symbol | None, path: 
         .replace("{path}", path)
         .replace("{file}", path)
     )
+
+
+def _has_entrypoint_annotation(index: RepoIndex, symbol: Symbol) -> bool:
+    """True when a method is invoked by a framework rather than by a call.
+
+    Route handlers, event listeners, scheduled jobs, and similar annotated
+    methods have graph edges that are not ordinary call expressions. Treating
+    them as "no callers" negatives would penalise a tool for being correct.
+    """
+    try:
+        lines = (index.root / symbol.path).read_text(
+            encoding="utf-8", errors="ignore"
+        ).splitlines()
+    except OSError:
+        return False
+    start = max(0, symbol.line - 14)
+    stop = min(len(lines), max(0, symbol.line - 1))
+    window = lines[start:stop]
+    return any(line.strip().startswith("@") for line in window)
 
 
 def _site(symbol: Symbol) -> dict:
@@ -294,33 +320,91 @@ def build_structural_instances(
                 break
         return instances
 
+    allow_ambiguous = bool(task_cfg.get("allow_ambiguous", False))
+    allow_empty = bool(task_cfg.get("allow_empty_gold", False))
     candidates = []
-    for symbol in _candidate_symbols(index, gold_files, gold_hunks):
+    seen_candidates: set[tuple] = set()
+
+    def consider(symbol: Symbol) -> None:
         if symbol.name in exclude_names or len(symbol.name) < 3:
-            continue
-        if task_name in {"symbol_definition", "callers", "callees", "impact"}:
+            return
+        if task_name in {"implementations"} and not symbol.is_type:
+            return
+        if task_name in {"overrides"} and not symbol.is_callable:
+            return
+        if task_name == "no_callers" and not (symbol.is_callable or symbol.is_type):
+            return
+        if not allow_ambiguous and task_name in {
+            "symbol_definition", "symbol_definitions", "callers", "callees",
+            "impact", "references", "implementations", "overrides", "no_callers",
+        }:
             if index.unique_symbol(symbol.name) is None:
-                continue
+                return
+        if symbol.key() in seen_candidates:
+            return
+        seen_candidates.add(symbol.key())
         candidates.append(symbol)
+
+    for symbol in _candidate_symbols(index, gold_files, gold_hunks):
+        consider(symbol)
+    if task_cfg.get("scan_all_symbols"):
+        if task_name == "implementations":
+            pool = index.parent_types()
+        elif task_name == "overrides":
+            pool = index.overridable_methods()
+        elif task_name == "symbol_definitions":
+            pool = index.ambiguous_symbols()
+        else:
+            pool = index.symbols
+        for symbol in pool:
+            consider(symbol)
     candidates.sort(key=_symbol_priority)
 
     for symbol in candidates:
         gold_sites = []
+        gold_edges = []
+        ambiguity = None
         if task_name == "symbol_definition":
             gold_sites = [_site(symbol)]
             gold = sorted({symbol.path})
+        elif task_name == "symbol_definitions":
+            named = index.symbols_named(symbol.name)
+            unique_sites = {
+                (item.path, item.line): item for item in named
+            }
+            if len(unique_sites) < 2:
+                continue
+            gold_sites = [_site(item) for item in unique_sites.values()]
+            gold = sorted({item.path for item in unique_sites.values()})
+            ambiguity = {"kind": "multiple_definitions", "definitions": len(unique_sites)}
         elif task_name == "callers":
-            callers = index.callers(symbol)
-            if not callers:
+            edges = index.caller_edges(symbol)
+            if not edges:
                 continue
-            gold = sorted({caller.path for caller in callers})
-            gold_sites = [_site(caller) for caller in callers]
+            callers = {caller.key(): caller for caller, _line in edges}
+            gold = sorted({caller.path for caller in callers.values()})
+            gold_sites = [_site(caller) for caller in callers.values()]
+            gold_edges = [
+                {
+                    "from": caller.name, "to": symbol.name,
+                    "path": caller.path, "line": line,
+                }
+                for caller, line in edges
+            ]
         elif task_name == "callees":
-            callees = index.callees(symbol)
-            if not callees:
+            edges = index.callee_edges(symbol)
+            if not edges:
                 continue
-            gold = sorted({callee.path for callee in callees})
-            gold_sites = [_site(callee) for callee in callees]
+            callees = {callee.key(): callee for callee, _line in edges}
+            gold = sorted({callee.path for callee in callees.values()})
+            gold_sites = [_site(callee) for callee in callees.values()]
+            gold_edges = [
+                {
+                    "from": symbol.name, "to": callee.name,
+                    "path": callee.path, "line": line,
+                }
+                for callee, line in edges
+            ]
         elif task_name == "impact":
             depth = int(task_cfg.get("impact_depth", 2))
             affected = index.impact(symbol, depth)
@@ -328,10 +412,83 @@ def build_structural_instances(
                 continue
             gold = sorted({item.path for item in affected})
             gold_sites = [_site(item) for item in affected]
+            gold_edges = [
+                {
+                    "from": caller.name, "to": current.name,
+                    "path": caller.path, "line": line,
+                }
+                for caller, current, line in index.impact_edges(symbol, depth)
+            ]
+        elif task_name == "references":
+            references = index.references(symbol)
+            if not references:
+                continue
+            gold = sorted({path for _owner, _line, path in references})
+            gold_sites = [
+                {
+                    "path": path, "line": line, "end_line": line,
+                    "name": owner.name if owner else "", "kind": "reference",
+                }
+                for owner, line, path in references
+            ]
+            gold_edges = [
+                {
+                    "from": owner.name if owner else "", "to": symbol.name,
+                    "path": path, "line": line,
+                }
+                for owner, line, path in references
+            ]
+        elif task_name == "implementations":
+            if not symbol.is_type:
+                continue
+            subtypes = index.implementations(symbol.name)
+            if not subtypes:
+                continue
+            gold = sorted({item.path for item in subtypes})
+            gold_sites = [_site(item) for item in subtypes]
+            gold_edges = [
+                {
+                    "from": symbol.name, "to": item.name,
+                    "path": item.path, "line": item.line,
+                }
+                for item in subtypes
+            ]
+        elif task_name == "overrides":
+            if not symbol.is_callable:
+                continue
+            overrides = index.overrides(symbol)
+            if not overrides:
+                continue
+            gold = sorted({item.path for item in overrides})
+            gold_sites = [_site(item) for item in overrides]
+            gold_edges = [
+                {
+                    "from": symbol.name, "to": item.name,
+                    "path": item.path, "line": item.line,
+                }
+                for item in overrides
+            ]
+        elif task_name == "no_callers":
+            # Strong absence: no call sites and no other identifier
+            # occurrences. This avoids penalising a tool for finding a real
+            # reference that the call-only heuristic missed.
+            declarations = len(index.symbols_named(symbol.name))
+            if (
+                index.callers(symbol)
+                or index.occurrence_count(symbol.name) > declarations
+                or _has_entrypoint_annotation(index, symbol)
+            ):
+                continue
+            gold = []
+            gold_sites = []
+            gold_edges = []
+            ambiguity = {"kind": "absence", "callers": 0}
         else:
             continue
 
-        if not min_gold <= len(gold) <= max_gold:
+        if not allow_empty and not gold:
+            continue
+        if not (min_gold <= len(gold) <= max_gold):
             continue
         query = _task_template(task_cfg, task_name, symbol, symbol.path)
         instance = _base_instance(commit_info, repo_name, task_name)
@@ -341,13 +498,18 @@ def build_structural_instances(
                 used_ids,
             ),
             "title": query,
-            "gold": {"files": gold, "hunks": {}, "sites": gold_sites},
+            "gold": {
+                "files": gold, "hunks": {}, "sites": gold_sites,
+                "edges": gold_edges,
+            },
             "query": {
                 "text": query,
                 "title": query,
                 "issue_text": commit_info.get("problem_text", ""),
                 "symbol": symbol.name,
+                "qualified_symbol": f"{Path(symbol.path).stem}.{symbol.name}",
                 "symbol_kind": symbol.kind,
+                "symbol_line": symbol.line,
                 "path": symbol.path,
                 "file": symbol.path,
                 "language": symbol.language,
@@ -360,6 +522,7 @@ def build_structural_instances(
                 "symbol_end_line": symbol.end_line,
                 "gold_count": len(gold),
                 "heuristic_ground_truth": True,
+                "ambiguity": ambiguity,
             },
         })
         instance["stats"] = {
@@ -433,6 +596,14 @@ def mine_repo(
     mining_cfg: dict | None = None,
 ) -> list[dict]:
     mining_cfg = mining_cfg or {}
+    if getattr(args, "impact_depth", None) is not None:
+        tasks = {
+            name: (
+                {**cfg, "impact_depth": int(args.impact_depth)}
+                if cfg.get("miner") == "structural" else cfg
+            )
+            for name, cfg in tasks.items()
+        }
     repo_path = home.repo_path(repo_cfg)
     if not gitutil.is_git_repo(repo_path):
         raise SystemExit(f"not a git repository: {repo_path}")
@@ -585,10 +756,13 @@ def mine_repo(
         try:
             for name in pending:
                 remaining = limits[name] - len(found[name])
-                per_commit = min(
-                    remaining,
+                desired = max(
+                    1,
                     int(tasks[name].get("symbols_per_commit", symbols_per_commit)),
                 )
+                # Over-generate a little so duplicate targets skipped by the
+                # caller do not starve a commit of usable instances.
+                per_commit = min(remaining, desired * 4)
                 try:
                     instances = build_structural_instances(
                         name, tasks[name], index, commit_info, repo_name,
@@ -599,7 +773,21 @@ def mine_repo(
                 except Exception as exc:
                     print(f"  ! {name} mining failed for {sha[:8]}: {exc}")
                     continue
+                existing_targets = {
+                    (
+                        (item.get("query") or {}).get("symbol"),
+                        (item.get("query") or {}).get("path"),
+                    )
+                    for item in found[name]
+                }
                 for instance in instances:
+                    key = (
+                        (instance.get("query") or {}).get("symbol"),
+                        (instance.get("query") or {}).get("path"),
+                    )
+                    if key in existing_targets:
+                        continue
+                    existing_targets.add(key)
                     found[name].append(instance)
                     print(
                         f"  + {instance['instance_id']} [{name}] "
@@ -608,7 +796,29 @@ def mine_repo(
         finally:
             gitutil.remove_worktree(repo_path, worktree)
 
-    return [instance for name in tasks for instance in found[name]]
+    instances = [instance for name in tasks for instance in found[name]]
+    holdout = float(_setting(args, mining_cfg, "holdout_fraction", 0.2))
+    seed = _setting(args, mining_cfg, "split_seed", 0)
+    return assign_splits(instances, holdout, seed)
+
+
+def assign_splits(instances: list[dict], holdout: float = 0.2, seed: int | str = 0) -> list[dict]:
+    """Deterministically tag instances as ``train`` or ``test``.
+
+    Existing tags are preserved so a manifest can be mined incrementally and a
+    held-out test set stays stable across runs.
+    """
+    for instance in instances:
+        meta = instance.get("meta") or {}
+        instance["meta"] = meta
+        if meta.get("split"):
+            continue
+        digest = hashlib.sha1(
+            f"{seed}:{instance.get('instance_id', '')}".encode("utf-8")
+        ).hexdigest()
+        bucket = int(digest[:8], 16) / 0xFFFFFFFF
+        meta["split"] = "test" if bucket < holdout else "train"
+    return instances
 
 
 def merge_manifest(
@@ -617,6 +827,8 @@ def merge_manifest(
     repo_name: str,
     task_names: list[str],
     workspace: str,
+    holdout: float = 0.2,
+    split_seed: int | str = 0,
 ) -> dict:
     keep = [
         instance for instance in existing.get("instances", [])
@@ -626,6 +838,7 @@ def merge_manifest(
         )
     ]
     merged = keep + new_instances
+    merged = assign_splits(merged, holdout, split_seed)
     merged.sort(
         key=lambda instance: (
             instance.get("repo", ""),

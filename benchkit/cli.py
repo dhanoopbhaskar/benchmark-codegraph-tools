@@ -86,6 +86,12 @@ def build_parser() -> argparse.ArgumentParser:
     p_mine.add_argument("--max-problem-chars", type=int, default=None)
     p_mine.add_argument("--exclude-subject", default=None)
     p_mine.add_argument("--symbols-per-commit", type=int, default=None)
+    p_mine.add_argument("--impact-depth", type=int, default=None)
+    p_mine.add_argument(
+        "--holdout-fraction", type=float, default=None,
+        help="fraction of new instances tagged as the held-out test split",
+    )
+    p_mine.add_argument("--split-seed", type=int, default=None)
     p_mine.add_argument("--offline", action="store_true", help="use commit messages, not GitHub")
     p_mine.add_argument("--import", dest="import_file", help="merge explicit instances from JSON")
     p_mine.add_argument("--dry-run", action="store_true")
@@ -103,6 +109,14 @@ def build_parser() -> argparse.ArgumentParser:
     p_run.add_argument("--query-mode", choices=["issue", "title"], default="issue")
     p_run.add_argument("--max-query-chars", type=int, default=500)
     p_run.add_argument("--jobs", type=int, default=1)
+    p_run.add_argument("--repeat", type=int, default=1, help="repeat each query; report median/p95")
+    p_run.add_argument("--split", choices=["train", "test"], default=None)
+    p_run.add_argument("--impact-depth", type=int, default=None)
+    p_run.add_argument(
+        "--no-scope-filter", dest="scope_filter", action="store_false",
+        help="keep tool results outside the repository include/exclude scope",
+    )
+    p_run.set_defaults(scope_filter=True)
     p_run.add_argument("--run-id", default=None)
     p_run.add_argument("--resume", action="store_true")
     p_run.add_argument("--fresh", action="store_true")
@@ -176,6 +190,16 @@ def cmd_mine(home: BenchHome, args) -> None:
         print(f"\n{len(all_new)} instance(s); manifest not written")
         return
 
+    holdout = (
+        args.holdout_fraction
+        if getattr(args, "holdout_fraction", None) is not None
+        else mining_cfg.get("holdout_fraction", 0.2)
+    )
+    split_seed = (
+        args.split_seed
+        if getattr(args, "split_seed", None) is not None
+        else mining_cfg.get("split_seed", 0)
+    )
     manifest = existing
     by_repo: dict[str, list[dict]] = {}
     for instance in all_new:
@@ -183,7 +207,8 @@ def cmd_mine(home: BenchHome, args) -> None:
     for repo_name, instances in by_repo.items():
         task_names_for_repo = sorted({instance.get("task") for instance in instances})
         manifest = merge_manifest(
-            manifest, instances, repo_name, task_names_for_repo, str(home.root)
+            manifest, instances, repo_name, task_names_for_repo, str(home.root),
+            holdout=float(holdout), split_seed=split_seed,
         )
     # Imported instances are merged by id, even when their repo is not local.
     imported_ids = {instance["instance_id"] for instance in all_new}

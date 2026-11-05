@@ -196,6 +196,27 @@ def normalize_path(path, repo) -> str:
     return value.replace("\\", "/")
 
 
+def path_in_scope(path: str, repo_cfg: dict | None) -> bool:
+    """Apply repository include/exclude globs to a tool-returned path."""
+    import fnmatch
+
+    repo_cfg = repo_cfg or {}
+    value = str(path or "").replace("\\", "/")
+    includes = repo_cfg.get("include") or []
+    excludes = repo_cfg.get("exclude") or []
+
+    def matches(pattern: str) -> bool:
+        pattern = str(pattern).replace("\\", "/")
+        return (
+            fnmatch.fnmatch(value, pattern)
+            or fnmatch.fnmatch("/" + value, pattern)
+        )
+
+    if includes and not any(matches(pattern) for pattern in includes):
+        return False
+    return not any(matches(pattern) for pattern in excludes)
+
+
 def is_test_path(path: str, patterns: list[str] | None = None) -> bool:
     value = "/" + str(path).replace("\\", "/").lstrip("/")
     default = ["/src/test/", "/src/it/", "/test/", "/tests/", "__tests__"]

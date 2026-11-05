@@ -3,12 +3,16 @@ from __future__ import annotations
 
 import json
 import re
+import statistics
+from pathlib import Path
 
 from .parsers import PARSERS, parse_results
 from .plugins import resolve as resolve_plugin
 from .process import run_cmd
 from .runners import get_runner
-from .text import keywords, normalize_path, render, split_terms, trim_problem
+from .text import (
+    keywords, normalize_path, path_in_scope, render, split_terms, trim_problem,
+)
 
 
 def normalize_tool(tool_cfg: dict, tool_defaults: dict | None = None) -> dict:
@@ -32,7 +36,7 @@ def query_for_task(tool_cfg: dict, task_name: str, task_cfg: dict) -> dict | Non
     if not isinstance(raw, dict):
         raise SystemExit(f"invalid query config for task '{task_name}'")
     resolved = dict(raw)
-    for key in ("parse", "runner", "timeout", "cwd", "env"):
+    for key in ("parse", "runner", "timeout", "cwd", "env", "scope_filter"):
         if resolved.get(key) is None and tool_cfg.get(key) is not None:
             resolved[key] = tool_cfg[key]
     resolved.setdefault("parse", "recursive_json")
@@ -111,6 +115,11 @@ def build_context(
         re.escape(str(term)) for term in name_symbols
     ) + ").*" if name_symbols else ".*"
 
+    path = query_payload.get("path") or query_payload.get("file") or ""
+    qualified = query_payload.get("qualified_symbol") or ""
+    if not qualified and symbol and path:
+        qualified = f"{Path(path).stem}.{symbol}"
+
     return {
         "repo": str(repo_path),
         "repo_name": instance.get("repo", ""),
@@ -124,10 +133,16 @@ def build_context(
         "k": int(getattr(args, "top_k", 10)),
         "top_k": int(getattr(args, "top_k", 10)),
         "symbol": symbol,
+        "qualified_symbol": qualified,
         "symbol_kind": query_payload.get("symbol_kind", ""),
-        "path": query_payload.get("path") or query_payload.get("file") or "",
-        "file": query_payload.get("path") or query_payload.get("file") or "",
+        "symbol_path": query_payload.get("path") or query_payload.get("file") or "",
+        "symbol_line": query_payload.get("symbol_line", ""),
+        "path": path,
+        "file": path,
+        "path_basename": Path(path).name if path else "",
         "language": query_payload.get("language", ""),
+        "source": query_payload.get("source") or "",
+        "target": query_payload.get("target") or "",
         "keywords": " ".join(terms),
         "keywords_regex": "|".join(
             str(term).replace("\\", "\\\\") for term in terms
@@ -219,38 +234,59 @@ def execute_tool(
         "task": task_name,
         "prepare_s": prepare_s,
         "query_s": None,
+        "query_s_samples": [],
         "results": [],
+        "raw_items": 0,
+        "parsed_items": 0,
+        "out_of_scope": 0,
+        "stdout_chars": 0,
+        "empty_result": False,
     }
 
+    repeat = max(1, int(getattr(args, "repeat", 1) or 1))
+    scope_filter = bool(getattr(args, "scope_filter", True))
+    if not bool(query_cfg.get("scope_filter", tool_cfg.get("scope_filter", True))):
+        scope_filter = False
+
     runner_name = query_cfg.get("runner")
-    if runner_name:
-        runner = get_runner(runner_name) or resolve_plugin(runner_name)
-        if runner is None:
-            raise RuntimeError(f"unknown runner '{runner_name}'")
-        items, elapsed = runner(query_cfg, repo, ctx, repo_cfg, float(query_cfg.get("timeout", 300)))
-        record["query_s"] = round(elapsed, 3)
-    else:
-        argv = query_cfg.get("argv")
-        if not argv:
-            raise RuntimeError(f"query for task '{task_name}' has no argv")
-        cwd = query_cfg.get("cwd", "{repo}")
-        rc, out, err, elapsed = run_cmd(
-            render_argv(argv, ctx),
-            cwd=render(cwd, ctx) if cwd else repo,
-            timeout=float(query_cfg.get("timeout", 300)),
-            env=query_cfg.get("env") or tool_cfg.get("env"),
-        )
-        record["query_s"] = round(elapsed, 3)
-        if rc != 0:
-            raise RuntimeError(f"query failed (rc={rc}): {err.strip()[-600:]}")
-        parser = query_cfg.get("parse", "recursive_json")
-        if parser in PARSERS:
-            items = parse_results(parser, out, repo, query_cfg)
+    samples: list[float] = []
+    items: list[dict] = []
+    for _ in range(repeat):
+        if runner_name:
+            runner = get_runner(runner_name) or resolve_plugin(runner_name)
+            if runner is None:
+                raise RuntimeError(f"unknown runner '{runner_name}'")
+            items, elapsed = runner(
+                query_cfg, repo, ctx, repo_cfg,
+                float(query_cfg.get("timeout", 300)),
+            )
+            samples.append(float(elapsed))
         else:
-            function = resolve_plugin(parser)
-            if function is None:
-                raise RuntimeError(f"unknown parser '{parser}'")
-            items = function(out, repo, query_cfg)
+            argv = query_cfg.get("argv")
+            if not argv:
+                raise RuntimeError(f"query for task '{task_name}' has no argv")
+            cwd = query_cfg.get("cwd", "{repo}")
+            rc, out, err, elapsed = run_cmd(
+                render_argv(argv, ctx),
+                cwd=render(cwd, ctx) if cwd else repo,
+                timeout=float(query_cfg.get("timeout", 300)),
+                env=query_cfg.get("env") or tool_cfg.get("env"),
+            )
+            samples.append(float(elapsed))
+            record["stdout_chars"] += len(out or "")
+            if rc != 0:
+                raise RuntimeError(f"query failed (rc={rc}): {err.strip()[-600:]}")
+            parser = query_cfg.get("parse", "recursive_json")
+            if parser in PARSERS:
+                items = parse_results(parser, out, repo, query_cfg)
+            else:
+                function = resolve_plugin(parser)
+                if function is None:
+                    raise RuntimeError(f"unknown parser '{parser}'")
+                items = function(out, repo, query_cfg)
+
+    record["query_s"] = round(statistics.median(samples), 3) if samples else None
+    record["query_s_samples"] = [round(value, 3) for value in samples]
 
     # Normalise once more: custom runners/parsers may return absolute paths.
     normalised = []
@@ -260,6 +296,12 @@ def execute_tool(
         path = normalize_path(item.get("path"), repo)
         if not path:
             continue
+        if scope_filter and not path_in_scope(path, repo_cfg):
+            record["out_of_scope"] += 1
+            continue
         normalised.append({**item, "path": path})
+    record["raw_items"] = len(items or [])
+    record["parsed_items"] = len(normalised)
+    record["empty_result"] = not normalised
     record["results"] = normalised[: max(int(getattr(args, "top_k", 10)), 1)]
     return record
