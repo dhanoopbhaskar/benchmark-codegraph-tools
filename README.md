@@ -1,15 +1,13 @@
 # Code graph benchmark
 
 A configurable, repeatable benchmark for code-graph and code-discovery tools.
-It is a generalisation of `../bench/`: repositories, tool adapters, and task
-types are data, not hard-coded names.
 
 The harness is **Python standard library only**, works on macOS/Linux/Windows,
 and uses **no LLM judge and no AI agent** in the measurement loop. Ground truth
 comes from local git history and a deterministic, regex-based source index.
 
 ```
-benchmark/
+benchmark-codegraph-tools/
 ├── bench.py                 # CLI: init | doctor | repos | tools | tasks | mine | run | report | runs
 ├── benchkit/                # harness implementation (stdlib only)
 │   ├── cli.py               # argument parsing
@@ -43,7 +41,7 @@ benchmark/
 ## Quick start
 
 ```bash
-cd benchmark
+cd benchmark-codegraph-tools
 
 # 1. Create config/repos.json, config/tools.json, config/tasks.json
 python3 bench.py init
@@ -198,6 +196,9 @@ python3 bench.py tools validate --name my-tool
 | `{symbol_path}` / `{symbol_line}` | declaration file and line |
 | `{path}` / `{file}` | repository-relative file path |
 | `{path_basename}` | basename of `{path}` |
+| `{path_stem}` | basename of `{path}` without its extension (e.g. `OrderDao`) |
+| `{path_dir}` | basename of the directory containing `{path}` (e.g. `model`) |
+| `{path_package}` | source-relative package path (e.g. `org/example/model`) |
 | `{source}` / `{target}` | source and target symbols for path tasks |
 | `{k}` / `{top_k}` | result limit |
 | `{keywords}` | space-separated identifiers from the query |
@@ -499,6 +500,11 @@ are required.
   symbol/reference resolver; shadowed names and overloaded names can widen gold.
 - `dependents` uses import statements only; same-package usage without imports
   is not counted.
+- JavaScript/TypeScript resolves relative imports (including `.jsx`/`.tsx` and
+  `index` files) and treats `<Component />` renders as call edges. tsconfig /
+  webpack path aliases (`@/...`) are not resolved, `React.memo`/`forwardRef`
+  wrappers are only seen when they contain a named function, and JSX text with
+  an unescaped apostrophe can hide the rest of that line from the indexer.
 - Negative controls (`no_callers`) make abstention and false positives visible;
   they do not replace a larger absence suite.
 - The shipped manifest has only Java repositories. The index supports Python,

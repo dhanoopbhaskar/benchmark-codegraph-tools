@@ -59,6 +59,18 @@ class MaskingTests(unittest.TestCase):
         self.assertNotIn("hidden", masked)
         self.assertIn("int x;", masked)
 
+    def test_strings_can_be_preserved_for_import_scans(self):
+        source = (
+            "import x from './x';\n"
+            "const url = 'http://example.test';\n"
+            "// hidden import { Nope } from './nope';\n"
+        )
+        masked = mask_code(source, "javascript", mask_strings=False)
+        self.assertIn("'./x'", masked)
+        self.assertIn("http://example.test", masked)
+        self.assertNotIn("hidden", masked)
+        self.assertNotIn("./nope", masked)
+
 
 class IndexTests(unittest.TestCase):
     def setUp(self):
@@ -199,6 +211,95 @@ class MultiLanguageIndexTests(unittest.TestCase):
             self.assertEqual([s.name for s in index.implementations("Base")], ["Impl"])
             base = next(s for s in index.symbols_named("handle") if s.path == "base.py")
             self.assertEqual([s.path for s in index.overrides(base)], ["impl.py"])
+
+
+REACT_FIXTURE = BENCH_ROOT / "tests" / "fixtures" / "react"
+
+
+class ReactIndexTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.index = RepoIndex(
+            REACT_FIXTURE,
+            {"include": ["**/*.tsx", "**/*.ts", "**/*.jsx", "**/*.js"]},
+        )
+
+    def test_module_imports_resolve(self):
+        self.assertEqual(
+            self.index.importers_of("src/components/Button.tsx"),
+            ["src/App.tsx"],
+        )
+        self.assertEqual(
+            self.index.importers_of("src/components/Plain.jsx"),
+            ["src/App.tsx"],
+        )
+        self.assertEqual(
+            self.index.importers_of("src/hooks/useTheme.ts"),
+            ["src/App.tsx", "src/components/Button.tsx"],
+        )
+
+    def test_commented_import_is_ignored(self):
+        self.assertFalse(any("Nope" in path for path in self.index.files))
+        targets = {
+            target
+            for resolved in self.index.imports.values()
+            for target in resolved
+        }
+        self.assertFalse(any("Nope" in target for target in targets))
+
+    def test_destructured_parameters_do_not_end_symbol(self):
+        button = self.index.unique_symbol("Button")
+        self.assertIsNotNone(button)
+        self.assertGreater(button.end_line, button.line)
+        icon = self.index.unique_symbol("IconButton")
+        self.assertIsNotNone(icon)
+        self.assertGreater(icon.end_line, icon.line)
+
+    def test_jsx_renders_are_call_edges(self):
+        button = self.index.unique_symbol("Button")
+        icon = self.index.unique_symbol("IconButton")
+        self.assertEqual(
+            sorted(caller.name for caller in self.index.callers(button)),
+            ["App", "IconButton"],
+        )
+        self.assertEqual(
+            [caller.name for caller in self.index.callers(icon)],
+            ["App"],
+        )
+        self.assertEqual(
+            [callee.name for callee in self.index.callees(icon)],
+            ["Button"],
+        )
+        plain = self.index.unique_symbol("Plain")
+        self.assertEqual(
+            [caller.name for caller in self.index.callers(plain)],
+            ["App"],
+        )
+        edge_names = {name for _owner, name, _line in self.index.edges}
+        self.assertNotIn("div", edge_names)
+        self.assertNotIn("span", edge_names)
+
+    def test_qualified_react_component_base_class(self):
+        legacy = self.index.unique_symbol("LegacyPanel")
+        self.assertIsNotNone(legacy)
+        self.assertEqual(legacy.kind, "class")
+        self.assertIn(
+            "LegacyPanel",
+            [item.name for item in self.index.subtypes("Component")],
+        )
+
+    def test_hook_calls_inside_destructured_component(self):
+        hook = self.index.unique_symbol("useTheme")
+        self.assertIsNotNone(hook)
+        self.assertEqual(
+            sorted(caller.name for caller in self.index.callers(hook)),
+            ["App", "Button"],
+        )
+
+    def test_arrow_parameter_types_with_nested_parens(self):
+        symbol = self.index.unique_symbol("useAfter")
+        self.assertIsNotNone(symbol)
+        self.assertGreater(symbol.end_line, symbol.line)
 
 
 class ParserTests(unittest.TestCase):

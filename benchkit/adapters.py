@@ -56,6 +56,28 @@ def _include_basename(repo_cfg: dict) -> str:
     return ""
 
 
+_SOURCE_ROOTS = {"java", "kotlin", "scala", "groovy"}
+
+
+def _package_path(path: str) -> str:
+    """Return the source-relative package path for a file.
+
+    ``.../src/main/java/org/example/dao/Foo.java`` -> ``org/example/dao``.
+    Falls back to the file's directory for layouts without a known source root.
+    """
+    parts = Path(path).parts
+    for index, part in enumerate(parts):
+        if (
+            part in _SOURCE_ROOTS
+            and index >= 2
+            and parts[index - 1] in {"main", "test"}
+            and parts[index - 2] == "src"
+        ):
+            return "/".join(parts[index + 1:-1])
+    parent = Path(path).parent.as_posix() if path else ""
+    return "" if parent == "." else parent
+
+
 def _tool_query_text(instance: dict) -> str:
     query = instance.get("query") or {}
     return (
@@ -140,6 +162,9 @@ def build_context(
         "path": path,
         "file": path,
         "path_basename": Path(path).name if path else "",
+        "path_stem": Path(path).stem if path else "",
+        "path_dir": Path(path).parent.name if path else "",
+        "path_package": _package_path(path) if path else "",
         "language": query_payload.get("language", ""),
         "source": query_payload.get("source") or "",
         "target": query_payload.get("target") or "",

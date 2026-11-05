@@ -313,6 +313,20 @@
           ],
           "parse": "cbm_query"
         },
+        "dependents": {
+          "argv": [
+            "codebase-memory-mcp",
+            "cli",
+            "query_graph",
+            "--project",
+            "{repo}",
+            "--query",
+            "MATCH (a:File)-[r:IMPORTS]->(b) WHERE (r.local_name = \"{path_stem}\" OR r.local_name = \"{path_dir}\") AND b.file_path CONTAINS \"/{path_package}/\" RETURN a.name, a.file_path, a.start_line, b.name LIMIT {k}",
+            "--format",
+            "json"
+          ],
+          "parse": "cbm_query"
+        },
         "overrides": {
           "argv": [
             "codebase-memory-mcp",

@@ -113,12 +113,17 @@ def _blank_span(chars: list[str], start: int, end: int) -> None:
             chars[index] = " "
 
 
-def mask_code(text: str, language: str | None) -> str:
-    """Replace comments and string literals with spaces, preserving newlines.
+def mask_code(text: str, language: str | None, mask_strings: bool = True) -> str:
+    """Replace comments and (optionally) string literals with spaces.
 
-    A single-pass scanner is used instead of regexes because Java route strings
-    such as ``"/owners/*/pets/{petId}"`` contain character pairs that look like
-    comment delimiters.
+    Newlines are preserved so line numbers stay stable. A single-pass scanner
+    is used instead of regexes because Java route strings such as
+    ``"/owners/*/pets/{petId}"`` contain character pairs that look like comment
+    delimiters.
+
+    ``mask_strings=False`` keeps string contents while still blanking comments.
+    Import statements (JS/TS ``from '...'`` / ``require('...')``) need this:
+    the specifier lives inside a string, so masking it hides every import.
     """
     chars = list(text)
     length = len(text)
@@ -171,7 +176,8 @@ def mask_code(text: str, language: str | None) -> str:
                 if not triple and quote != "`" and text[cursor] == "\n":
                     break
                 cursor += 1
-            _blank_span(chars, index, cursor)
+            if mask_strings:
+                _blank_span(chars, index, cursor)
             index = cursor
             continue
 
@@ -191,6 +197,20 @@ def _line_offsets(text: str) -> list[int]:
     return offsets
 
 
+def _brace_end_at(masked: str, open_index: int) -> tuple[int, bool]:
+    """Find the matching ``}`` for the ``{`` at *open_index*."""
+    depth = 0
+    for index in range(open_index, len(masked)):
+        char = masked[index]
+        if char == "{":
+            depth += 1
+        elif char == "}":
+            depth -= 1
+            if depth == 0:
+                return _line_at(masked, index), True
+    return max(_line_at(masked, open_index), masked.count("\n") + 1), True
+
+
 def _brace_end_line(masked: str, offsets: list[int], start_line: int) -> tuple[int, bool]:
     """Find the matching ``}`` for the first ``{`` on/after *start_line*."""
     start_index = offsets[max(0, min(start_line - 1, len(offsets) - 1))]
@@ -201,16 +221,119 @@ def _brace_end_line(masked: str, offsets: list[int], start_line: int) -> tuple[i
     head = masked[start_index:open_index]
     if ";" in head:
         return start_line, False
+    return _brace_end_at(masked, open_index)
+
+
+def _matching_index(
+    masked: str, open_index: int, open_char: str, close_char: str
+) -> int:
+    """Return the index of the ``close_char`` matching *open_index*, or -1."""
     depth = 0
     for index in range(open_index, len(masked)):
         char = masked[index]
-        if char == "{":
+        if char == open_char:
             depth += 1
-        elif char == "}":
+        elif char == close_char:
             depth -= 1
             if depth == 0:
-                return _line_at(masked, index), True
-    return max(start_line, masked.count("\n") + 1), True
+                return index
+    return -1
+
+
+def _expression_end_line(
+    masked: str, start_index: int, base_line: int
+) -> tuple[int, bool]:
+    """Best-effort end line for an arrow function's expression body."""
+    depth = 0
+    index = start_index
+    while index < len(masked):
+        char = masked[index]
+        if char in "([{":
+            depth += 1
+        elif char in ")]}":
+            if depth == 0:
+                break
+            depth -= 1
+        elif char == ";" and depth == 0:
+            return _line_at(masked, index), True
+        index += 1
+
+    # No semicolon (ASI style): stop before a line that is outdented relative
+    # to the declaration and does not look like a continuation.
+    lines = masked.splitlines()
+    start_line = _line_at(masked, start_index)
+    declaration = lines[base_line - 1] if base_line <= len(lines) else ""
+    indent = len(declaration) - len(declaration.lstrip(" \t"))
+    last = start_line
+    for number in range(start_line + 1, len(lines) + 1):
+        raw = lines[number - 1]
+        if not raw.strip():
+            continue
+        stripped = raw.lstrip()
+        current = len(raw) - len(stripped)
+        continuation = stripped.startswith(("</", ")", "]", "}", ".", "?", ":", "&&", "||"))
+        if current <= indent and not continuation:
+            break
+        last = number
+    return max(base_line, last), True
+
+
+def _arrow_index(masked: str, name_index: int) -> int:
+    """Find the ``=>`` operator for an arrow function, ignoring nested ones.
+
+    A parameter type such as ``(callback: () => void) => {}`` contains an
+    earlier ``=>``. Only a token at bracket depth zero is the function's own
+    arrow.
+    """
+    start = masked.find("=", name_index)
+    index = name_index if start < 0 else start + 1
+    depth = 0
+    while index < len(masked):
+        char = masked[index]
+        if char in "([{":
+            depth += 1
+        elif char in ")]}":
+            depth = max(0, depth - 1)
+        elif depth == 0 and masked.startswith("=>", index):
+            return index
+        index += 1
+    return -1
+
+
+def _js_body_range(
+    masked: str, name_index: int, *, is_arrow: bool = False
+) -> tuple[int, bool]:
+    """Return ``(end_line, has_body)`` for a JS/TS declaration.
+
+    Unlike :func:`_brace_end_line`, this skips destructured parameters and type
+    annotations. React components are usually written as
+    ``function Button({ label }) {}`` or ``const Button = ({ label }) => {}``;
+    the first ``{`` belongs to the parameter list, not the body, so using it
+    would end the symbol on its declaration line.
+    """
+    base_line = _line_at(masked, name_index)
+    if is_arrow:
+        arrow = _arrow_index(masked, name_index)
+        if arrow < 0:
+            return base_line, False
+        cursor = arrow + 2
+        while cursor < len(masked) and masked[cursor] in " \t\r\n":
+            cursor += 1
+        if cursor < len(masked) and masked[cursor] == "{":
+            return _brace_end_at(masked, cursor)
+        return _expression_end_line(masked, cursor, base_line)
+
+    paren = masked.find("(", name_index)
+    if paren < 0:
+        return base_line, False
+    close = _matching_index(masked, paren, "(", ")")
+    if close < 0:
+        return base_line, False
+    brace = masked.find("{", close)
+    semicolon = masked.find(";", close)
+    if brace < 0 or (0 <= semicolon < brace):
+        return base_line, False
+    return _brace_end_at(masked, brace)
 
 
 def _indent_end_line(lines: list[str], start_line: int, indent: int) -> int:
@@ -224,6 +347,16 @@ def _indent_end_line(lines: list[str], start_line: int, indent: int) -> int:
             break
         last = index + 1
     return last
+
+
+def _owner_at(callables: list[Symbol], line: int) -> Symbol | None:
+    """Innermost callable whose range contains *line*."""
+    owner = None
+    for symbol in callables:
+        if symbol.line <= line <= symbol.end_line:
+            if owner is None or symbol.line > owner.line:
+                owner = symbol
+    return owner
 
 
 def _clean_type_name(value: str) -> str:
@@ -308,12 +441,12 @@ PY_CLASS = re.compile(
 JS_FUNCTION = re.compile(r"\bfunction\s+([A-Za-z_$][\w$]*)\s*\(")
 JS_CLASS = re.compile(
     r"\bclass\s+([A-Za-z_$][\w$]*)\s*"
-    r"(?:extends\s+([A-Za-z_$][\w$]*))?\s*"
-    r"(?:implements\s+([A-Za-z_$][\w$.,\s]*?))?\s*\{"
+    r"(?:extends\s+([A-Za-z_$][\w$.]*)(?:\s*<[^>{}\n]*>)?)?\s*"
+    r"(?:implements\s+([A-Za-z_$][\w$.,\s<>]*?))?\s*\{"
 )
 JS_ARROW = re.compile(
     r"\b(?:const|let|var)\s+([A-Za-z_$][\w$]*)\s*=\s*(?:async\s*)?"
-    r"(?:\([^)\n]*\)|[A-Za-z_$][\w$]*)\s*=>"
+    r"(?:\([^;\n]*?\)|[A-Za-z_$][\w$]*)\s*=>"
 )
 JS_METHOD = re.compile(
     r"(?m)^[ \t]*(?:async\s+)?(?:static\s+)?(?:get\s+|set\s+)?"
@@ -322,6 +455,9 @@ JS_METHOD = re.compile(
 GO_FUNC = re.compile(r"(?m)^[ \t]*func\s+(?:\([^)]*\)\s*)?([A-Za-z_]\w*)\s*\(")
 
 CALL_RE = re.compile(r"\b([A-Za-z_$][\w$]*)\s*\(")
+# Custom JSX elements only: lowercase tags are host elements, not symbols.
+JSX_OPEN = re.compile(r"<([A-Z][\w$]*(?:\.[A-Za-z_$][\w$]*)*)(?=[\s/>])")
+JSX_SUFFIXES = (".js", ".jsx", ".tsx")
 
 JAVA_IMPORT = re.compile(r"(?m)^[ \t]*import\s+(?:static\s+)?([\w.$*]+)\s*;")
 PY_IMPORT = re.compile(r"(?m)^[ \t]*import\s+([^\n#]+)")
@@ -411,21 +547,26 @@ def parse_file(path: str, text: str, language: str) -> tuple[list[Symbol], list[
         for match in JS_FUNCTION.finditer(masked):
             name = match.group(1)
             line = _line_at(masked, match.start(1))
-            end_line, has_body = _brace_end_line(masked, offsets, line)
+            end_line, has_body = _js_body_range(masked, match.start(1))
             _add_symbol(symbols, seen, name, "function", path, line, end_line, has_body, language)
         for match in JS_ARROW.finditer(masked):
             name = match.group(1)
             line = _line_at(masked, match.start(1))
-            end_line, has_body = _brace_end_line(masked, offsets, line)
+            end_line, has_body = _js_body_range(
+                masked, match.start(1), is_arrow=True
+            )
             _add_symbol(symbols, seen, name, "function", path, line, end_line, has_body, language)
         for match in JS_METHOD.finditer(masked):
             name = match.group(1)
             if name in CONTROL_WORDS:
                 continue
             line = _line_at(masked, match.start(1))
-            end_line, has_body = _brace_end_line(masked, offsets, line)
+            end_line, has_body = _js_body_range(masked, match.start(1))
             _add_symbol(symbols, seen, name, "method", path, line, end_line, has_body, language)
-        for match in JS_IMPORT.finditer(masked):
+        # Imports keep their string literals: the specifier is the thing we
+        # need, and normal masking blanks it.
+        import_view = mask_code(text, language, mask_strings=False)
+        for match in JS_IMPORT.finditer(import_view):
             spec = match.group(1) or match.group(2) or match.group(3)
             if spec:
                 imports.append(spec)
@@ -723,7 +864,6 @@ class RepoIndex:
                 continue
             language = detect_language(path)
             masked = mask_code(text, language)
-            offsets = _line_offsets(masked)
             decl_lines = {s.line for s in self.by_file.get(path, [])}
             for match in CALL_RE.finditer(masked):
                 name = match.group(1)
@@ -735,17 +875,48 @@ class RepoIndex:
                 line = _line_at(masked, start)
                 if line in decl_lines:
                     continue
-                owner = None
-                for symbol in callables:
-                    if symbol.line <= line <= symbol.end_line:
-                        if owner is None or symbol.line > owner.line:
-                            owner = symbol
+                owner = _owner_at(callables, line)
                 if owner is None:
                     continue
                 self.edges.append((owner, name, line))
 
+            if path.endswith(JSX_SUFFIXES):
+                self._add_jsx_edges(masked, callables)
+
         for owner, name, _line in self.edges:
             self.calls_by_name.setdefault(name, []).append(owner)
+
+    def _add_jsx_edges(self, masked: str, callables: list[Symbol]) -> None:
+        """Treat ``<Component />`` renders as call edges.
+
+        React components are used through JSX, not ``Component()`` calls, so
+        the call regex alone sees every component as uncalled. Lowercase tags
+        are host elements and are ignored.
+        """
+        for match in JSX_OPEN.finditer(masked):
+            start = match.start(1)
+            previous = masked[start - 2] if start >= 2 else ""
+            # Reject type arguments such as ``Array<Foo>`` / ``useState<Foo>``;
+            # a JSX tag is never directly preceded by an identifier or `)`.
+            if previous and (previous.isalnum() or previous in "_$)]"):
+                continue
+            name = match.group(1).rsplit(".", 1)[-1]
+            if len(name) < 2:
+                continue
+            after = match.end()
+            while after < len(masked) and masked[after] in " \t":
+                after += 1
+            # Generic parameter lists look like ``<Props extends ...>`` or
+            # ``<Props, ...>``; they are not JSX renders.
+            if masked.startswith("extends", after):
+                continue
+            if after < len(masked) and masked[after] in "=,":
+                continue
+            line = _line_at(masked, start)
+            owner = _owner_at(callables, line)
+            if owner is None:
+                continue
+            self.edges.append((owner, name, line))
 
     def callers(self, target: Symbol) -> list[Symbol]:
         """Caller symbols whose body contains a call to *target*'s name."""
